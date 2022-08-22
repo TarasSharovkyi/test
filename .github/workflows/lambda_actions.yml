@@ -23,7 +23,6 @@ jobs:
         run: |
           zip -j yelp_business_to_parquet.zip yelp_business_to_parquet.py
           aws s3 cp yelp_business_to_parquet.zip s3://ts-mybucket-001/lambda/yelp_business_to_parquet.zip
-          aws s3 cp lambda.template s3://ts-mybucket-001/lambda/lambda.template
       - name: deploy
         run: |
            aws cloudformation deploy --stack-name ghaStack --template-file lambda.template --region eu-central-1
