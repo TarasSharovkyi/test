@@ -26,4 +26,4 @@ jobs:
           aws s3 cp lambda.template s3://ts-mybucket-001/lambda/lambda.template
       - name: deploy
         run: |
-           aws cloudformation create-stack --stack-name ghaStack --template-url lambda.template --region eu-central-1
+           aws cloudformation deploy --stack-name ghaStack --template-file lambda.template --region eu-central-1
