@@ -22,4 +22,4 @@ jobs:
       - name: deploy
         run: |
           zip -j deploy.zip ./yelp_business_to_parquet.py
-          aws lambda update-function-code --function-name=lyelp_business_to_parquet --zip-file=fileb://deploy.zip
+          aws lambda update-function-code --function-name=yelp_business_to_parquet --zip-file=fileb://deploy.zip
