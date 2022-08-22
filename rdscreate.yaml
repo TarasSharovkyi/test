@@ -54,13 +54,18 @@ Resources:
   MyDB:
     Type: 'AWS::RDS::DBInstance'
     Properties:
-      DBInstanceIdentifier: !Ref DBInstanceID
-      DBName: !Ref DBName
-      DBInstanceClass: !Ref DBInstanceClass
       AllocatedStorage: !Ref DBAllocatedStorage
-      Engine: postgre
+      AllowMajorVersionUpgrade: False
+      AutoMinorVersionUpgrade: False
+      Engine: postgres
       EngineVersion: "14.2"
+      DBInstanceIdentifier: 'database-2'
       MasterUsername: !Ref DBUsername
       MasterUserPassword: !Ref DBPassword
+      DBInstanceClass: !Ref DBInstanceClass
+      DBName: !Ref DBName
+      Port: 5432
+      VPCSecurityGroups: ['sg-0b04576c8b8a52331']
+      AvailabilityZone: 'eu-central-1c'
       MonitoringInterval: 60
       MonitoringRoleArn: 'arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u'
