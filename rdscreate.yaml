@@ -58,7 +58,7 @@ Resources:
       AllocatedStorage: !Ref DBAllocatedStorage
       Engine: PostgreSQL
       EngineVersion: "14.2"
-      MasterUsername: !Ref DBUsername
-      MasterUserPassword: !Ref DBPassword
+      MasterUsername: 'postgres'
+      MasterUserPassword: 'User12345678!'
       MonitoringInterval: 60
       MonitoringRoleArn: 'arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u'
