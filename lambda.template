@@ -7,9 +7,6 @@ Resources:
       Handler: lambda_function.lambda_handler
       Role: arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u
       FunctionName: yelp_business_to_parquet_gha
-      Code:
-        S3Bucket: ts-mybucket-001
-        S3Key: yelp_business_to_parquet.zip
       Runtime: python3.9
       Timeout: 180
       MemorySize: 3008
