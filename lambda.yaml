@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description:
+Description: CloudFormation template for RiaLambda
 Resources:
   YelpFromInputToTableviewJsonsToS3:
     Type: AWS::Lambda::Function
