@@ -10,7 +10,6 @@ Resources:
       Code:
         S3Bucket: ts-mybucket-001
         S3Key: lambda/yelp_business_to_parquet.zip'
-      Architectures: x86_64
       Runtime: python3.9
       Timeout: 180
       MemorySize: 3008
