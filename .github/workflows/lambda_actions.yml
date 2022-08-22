@@ -19,7 +19,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
+      - name: lambda_zip
+        run: |
+          zip -j lambda.zip ./yelp_business_to_parquet.py
       - name: deploy
         run: |
-          zip -j deploy.zip ./yelp_business_to_parquet.py
-          aws lambda update-function-code --function-name=yelp_business_to_parquet --zip-file=fileb://deploy.zip
+          zip -j deploy.zip ./lambda.yml
+          aws cloudformation create-stack --template-url=fileb://deploy.zip
