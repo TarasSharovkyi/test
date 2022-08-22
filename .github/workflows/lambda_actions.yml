@@ -1,4 +1,4 @@
-name: Deploy
+name: Lambda_actions
 
 on:
   push:
