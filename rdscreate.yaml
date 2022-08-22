@@ -67,5 +67,3 @@ Resources:
       Port: 5432
       VPCSecurityGroups: ['sg-0b04576c8b8a52331']
       AvailabilityZone: 'eu-central-1c'
-      MonitoringInterval: 60
-      MonitoringRoleArn: 'arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u'
