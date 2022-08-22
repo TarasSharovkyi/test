@@ -21,6 +21,6 @@ jobs:
           aws-region: eu-central-1
       - name: deploy
         run: |
-          zip -j yelp_business_to_parquet.zip yelp_business_to_parquet.py
-          aws s3 cp yelp_business_to_parquet.zip s3://ts-mybucket-001/lambda/yelp_business_to_parquet.zip
+#          zip -j yelp_business_to_parquet.zip yelp_business_to_parquet.py
+#          aws s3 cp yelp_business_to_parquet.zip s3://ts-mybucket-001/lambda/yelp_business_to_parquet.zip
           aws cloudformation deploy --stack-name gha-stack --template-file lambda.yaml --region eu-central-1
