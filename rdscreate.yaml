@@ -41,7 +41,7 @@ Resources:
       DBName: !Ref DBName
       DBInstanceClass: !Ref DBInstanceClass
       AllocatedStorage: !Ref DBAllocatedStorage
-      Engine: PostgreSQL
+      Engine: postgres
       EngineVersion: "14.2"
       MasterUsername: 'postgres'
       MasterUserPassword: 'User12345678!'
