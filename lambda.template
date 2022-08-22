@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description:
+Description: CloudFormation template for RiaLambda
 Resources:
   YelpFromInputToTableviewJsonsToS3:
     Type: AWS::Lambda::Function
@@ -9,7 +9,8 @@ Resources:
       FunctionName: yelp_business_to_parquet_gha
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: lambda/yelp_business_to_parquet.zip
+        S3Key: lambda/yelp_business_to_parquet.zip'
+      Architectures: x86_64
       Runtime: python3.9
       Timeout: 180
       MemorySize: 3008
