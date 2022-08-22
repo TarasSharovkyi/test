@@ -24,5 +24,6 @@ jobs:
           zip -j lambda.zip ./yelp_business_to_parquet.py
       - name: deploy
         run: |
-          zip -j deploy.zip ./lambda.yaml
-          aws cloudformation create-stack --template-url=fileb://deploy.zip
+#          zip -j deploy.zip ./lambda.yaml
+#          aws cloudformation create-stack --template-url=fileb://deploy.zip
+          aws cloudformation deploy --stack-name gha-stack --template-file ./lambda.yaml --region eu-central-1
