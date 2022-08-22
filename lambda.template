@@ -9,7 +9,7 @@ Resources:
       FunctionName: yelp_business_to_parquet_gha
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: lambda/yelp_business_to_parquet.zip'
+        S3Key: yelp_business_to_parquet.zip
       Runtime: python3.9
       Timeout: 180
       MemorySize: 3008
