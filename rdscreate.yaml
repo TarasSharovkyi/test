@@ -31,7 +31,24 @@ Parameters:
     MinValue: '20'
     MaxValue: '65536'
     ConstraintDescription: must be between 20 and 65536 GiB.
-
+  DBUsername:
+    Default: 'postgres'
+    NoEcho: 'true'
+    Description: Username for MySQL database access
+    Type: String
+    MinLength: '1'
+    MaxLength: '63'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+  DBPassword:
+      Default: 'postgres'
+      NoEcho: 'true'
+      Description: Password MySQL database access
+      Type: String
+      MinLength: '8'
+      MaxLength: '41'
+      AllowedPattern: '[a-zA-Z0-9]*'
+      ConstraintDescription: must contain only alphanumeric characters.
 
 Resources:
   MyDB:
@@ -41,9 +58,9 @@ Resources:
       DBName: !Ref DBName
       DBInstanceClass: !Ref DBInstanceClass
       AllocatedStorage: !Ref DBAllocatedStorage
-      Engine: postgres
+      Engine: postgre
       EngineVersion: "14.2"
-      MasterUsername: 'postgres'
-      MasterUserPassword: 'User12345678!'
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
       MonitoringInterval: 60
       MonitoringRoleArn: 'arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u'
