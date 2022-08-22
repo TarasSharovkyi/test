@@ -8,7 +8,8 @@ Resources:
       Role: arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u
       FunctionName: yelp_business_to_parquet_gha
       Code:
-        ZipFile: https://ts-mybucket-001.s3.eu-central-1.amazonaws.com/lambda/yelp_business_to_parquet.zip
+        S3Bucket: ts-mybucket-001
+        S3Key: lambda/yelp_business_to_parquet.zip
       Runtime: python3.9
       Timeout: 180
       MemorySize: 3008
