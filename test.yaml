@@ -102,6 +102,7 @@ Resources:
           KEY: DEV-TEST
           REGION: eu-central-1
           VALUE: Auto-Shutdown
+
   RDSStartEventRule:
     Type: AWS::Events::Rule
     Properties:
