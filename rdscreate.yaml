@@ -51,6 +51,7 @@ Parameters:
       ConstraintDescription: must contain only alphanumeric characters.
 
 Resources:
+
   AutoRiaRDSPostgreSQL:
     Type: 'AWS::RDS::DBInstance'
     Properties:
@@ -60,6 +61,7 @@ Resources:
       Engine: postgres
       EngineVersion: "14.2"
       DBInstanceIdentifier: 'ria-db-postgres'
+      DeleteAutomatedBackups: False
       MasterUsername: !Ref DBUsername
       MasterUserPassword: !Ref DBPassword
       DBInstanceClass: !Ref DBInstanceClass
@@ -85,7 +87,7 @@ Resources:
       Environment:
         Variables:
           DATABASE: postgres
-          DB_HOST: database-1.cs1ac7ipvtir.eu-central-1.rds.amazonaws.com
+          DB_HOST: ria-db-postgres.cs1ac7ipvtir.eu-central-1.rds.amazonaws.com
           DB_PASSWORD: 12345678
           DB_PORT: 5432
           DB_USER: postgres
@@ -121,7 +123,7 @@ Resources:
       FunctionName: ts_rds_start_lambda
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/rds_start_lambda.zip
+        S3Key: auto_ria_src/lambda/rds_start.zip
       Runtime: python3.8
       Timeout: 300
       MemorySize: 3008
@@ -159,7 +161,7 @@ Resources:
       FunctionName: ts_rds_stop_lambda
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/rds_stop_lambda.zip
+        S3Key: auto_ria_src/lambda/rds_stop.zip
       Runtime: python3.8
       Timeout: 300
       MemorySize: 3008
@@ -172,11 +174,11 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: "RDS Stop Daily Event Rule"
-      Name: ts_rds_start_daily_rule
+      Name: ts_rds_stop_daily_rule
       ScheduleExpression: 'cron(10 21 ? * * *)'
       State: "ENABLED"
       Targets:
-        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:rds_stop_lambda'
+        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:ts_rds_stop_lambda'
           Id: "RDSStopEventRule"
   PermissionForEventsToInvokeLambdaStopRDS:
     Type: AWS::Lambda::Permission
@@ -188,4 +190,3 @@ Resources:
         Fn::GetAtt:
           - "RDSStopEventRule"
           - "Arn"
-
