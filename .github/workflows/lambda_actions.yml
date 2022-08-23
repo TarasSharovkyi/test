@@ -32,4 +32,4 @@ jobs:
           aws s3 cp rds_stop.zip s3://ts-mybucket-001/auto_ria_src/lambda/rds_stop.zip
       - name: deploy
         run: |
-          aws cloudformation deploy --stack-name ghaStack --template-file lambda_event.yaml --region eu-central-1
+          aws cloudformation deploy --stack-name ghaStack --template-file test.yaml --region eu-central-1

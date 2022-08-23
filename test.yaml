@@ -11,7 +11,7 @@ Resources:
       FunctionName: ts_rds_start_lambda
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/rds_start_lambda.zip
+        S3Key: auto_ria_src/lambda/rds_start.zip
       Runtime: python3.8
       Timeout: 300
       MemorySize: 3008
@@ -49,7 +49,7 @@ Resources:
       FunctionName: ts_rds_stop_lambda
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/rds_stop_lambda.zip
+        S3Key: auto_ria_src/lambda/rds_stop.zip
       Runtime: python3.8
       Timeout: 300
       MemorySize: 3008
