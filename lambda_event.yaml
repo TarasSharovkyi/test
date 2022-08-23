@@ -11,6 +11,7 @@ Resources:
       Targets:
         - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:yelp_business_to_parquet'
           Id: "NewCustomer"
+
   PermissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
