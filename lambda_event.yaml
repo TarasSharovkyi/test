@@ -15,7 +15,7 @@ Resources:
   PermissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: 'yelp_business_to_parquet '
+      FunctionName: 'yelp_business_to_parquet'
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn:
