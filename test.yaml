@@ -66,7 +66,7 @@ Resources:
       ScheduleExpression: 'cron(10 21 ? * * *)'
       State: "ENABLED"
       Targets:
-        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:rds_stop_lambda'
+        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:ts_rds_stop_daily_rule'
           Id: "RDSStopEventRule"
   PermissionForEventsToInvokeLambdaStopRDS:
     Type: AWS::Lambda::Permission
