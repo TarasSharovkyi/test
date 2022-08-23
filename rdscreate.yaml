@@ -51,7 +51,7 @@ Parameters:
       ConstraintDescription: must contain only alphanumeric characters.
 
 Resources:
-  MyDB:
+  AutoRiaRDSPostgreSQL:
     Type: 'AWS::RDS::DBInstance'
     Properties:
       AllocatedStorage: !Ref DBAllocatedStorage
@@ -109,7 +109,7 @@ Resources:
     Properties:
       Handler: lambda_function.lambda_handler
       Role: arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u
-      FunctionName: rds_start_lambda
+      FunctionName: ts_rds_start_lambda
       Code:
         S3Bucket: ts-mybucket-001
         S3Key: auto_ria_src/lambda/rds_start_lambda.zip
@@ -129,7 +129,7 @@ Resources:
   PermissionForEventsToInvokeLambdaStartRDS:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: 'rds_start_lambda'
+      FunctionName: 'ts_rds_start_lambda'
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn:
@@ -142,7 +142,7 @@ Resources:
     Properties:
       Handler: lambda_function.lambda_handler
       Role: arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u
-      FunctionName: rds_stop_daily_rule
+      FunctionName: ts_rds_stop_lambda
       Code:
         S3Bucket: ts-mybucket-001
         S3Key: auto_ria_src/lambda/rds_stop_lambda.zip
@@ -162,7 +162,7 @@ Resources:
   PermissionForEventsToInvokeLambdaStopRDS:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: 'rds_stop_daily_rule'
+      FunctionName: 'ts_rds_stop_lambda'
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn:
