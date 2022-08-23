@@ -112,7 +112,7 @@ Resources:
       FunctionName: ts_rds_start_lambda
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/rds_start_lambda.zip
+        S3Key: auto_ria_src/lambda/rds_start.zip
       Runtime: python3.8
       Timeout: 300
       MemorySize: 3008
@@ -135,5 +135,38 @@ Resources:
       SourceArn:
         Fn::GetAtt:
           - "RDSStartEventRule"
+          - "Arn"
+
+  LambdaStopRDS:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Role: arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u
+      FunctionName: ts_rds_stop_lambda
+      Code:
+        S3Bucket: ts-mybucket-001
+        S3Key: auto_ria_src/lambda/rds_stop.zip
+      Runtime: python3.8
+      Timeout: 300
+      MemorySize: 3008
+  RDSStopEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "RDS Stop Daily Event Rule"
+      Name: ts_rds_start_daily_rule
+      ScheduleExpression: 'cron(10 21 ? * * *)'
+      State: "ENABLED"
+      Targets:
+        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:ts_rds_stop_lambda'
+          Id: "RDSStopEventRule"
+  PermissionForEventsToInvokeLambdaStopRDS:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: 'ts_rds_stop_lambda'
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        Fn::GetAtt:
+          - "RDSStopEventRule"
           - "Arn"
 
