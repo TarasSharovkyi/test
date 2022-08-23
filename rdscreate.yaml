@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: CloudFormation template for RiaRDS
+Description: CloudFormation template for AutoRiaStack
 Parameters:
   DBInstanceID:
     Default: riadbinstance
@@ -124,7 +124,7 @@ Resources:
       ScheduleExpression: 'cron(00 20 ? * * *)'
       State: "ENABLED"
       Targets:
-        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:rds_start_lambda'
+        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:ts_rds_start_lambda'
           Id: "RDSStartEventRule"
   PermissionForEventsToInvokeLambdaStartRDS:
     Type: AWS::Lambda::Permission
@@ -157,7 +157,7 @@ Resources:
       ScheduleExpression: 'cron(10 21 ? * * *)'
       State: "ENABLED"
       Targets:
-        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:rds_stop_lambda'
+        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:ts_rds_stop_lambda'
           Id: "RDSStopEventRule"
   PermissionForEventsToInvokeLambdaStopRDS:
     Type: AWS::Lambda::Permission
