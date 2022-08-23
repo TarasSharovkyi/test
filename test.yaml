@@ -62,7 +62,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: "RDS Stop Daily Event Rule"
-      Name: ts_rds_start_daily_rule
+      Name: ts_rds_stop_daily_rule
       ScheduleExpression: 'cron(10 21 ? * * *)'
       State: "ENABLED"
       Targets:
