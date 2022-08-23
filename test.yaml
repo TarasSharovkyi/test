@@ -1,89 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: CloudFormation template for AutoRiaStack
-Parameters:
-  DBInstanceID:
-    Default: riadbinstance
-    Description: My database instance
-    Type: String
-    MinLength: '1'
-    MaxLength: '63'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: >-
-        Must begin with a letter and must not end with a hyphen or contain two
-        consecutive hyphens.
-  DBName:
-    Default: riadbgha
-    Description: My database
-    Type: String
-    MinLength: '1'
-    MaxLength: '64'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: Must begin with a letter and contain only alphanumeric characters.
-  DBInstanceClass:
-    Default: db.t3.micro
-    Description: DB instance class
-    Type: String
-    ConstraintDescription: Must select a valid DB instance type.
-  DBAllocatedStorage:
-    Default: '20'
-    Description: The size of the database (GiB)
-    Type: Number
-    MinValue: '20'
-    MaxValue: '65536'
-    ConstraintDescription: must be between 20 and 65536 GiB.
-  DBUsername:
-    Default: 'postgres'
-    NoEcho: 'true'
-    Description: Username for MySQL database access
-    Type: String
-    MinLength: '1'
-    MaxLength: '63'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
-  DBPassword:
-      Default: 'postgres'
-      NoEcho: 'true'
-      Description: Password MySQL database access
-      Type: String
-      MinLength: '8'
-      MaxLength: '41'
-      AllowedPattern: '[a-zA-Z0-9]*'
-      ConstraintDescription: must contain only alphanumeric characters.
 
 Resources:
-  LambdaAutoRiaToS3AndRDSDaily:
-    Type: AWS::Lambda::Function
-    Properties:
-      Handler: lambda_function.lambda_handler
-      Role: arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u
-      FunctionName: auto_ria_to_s3_and_rds_daily
-      Code:
-        S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
-      Runtime: python3.9
-      Timeout: 300
-      MemorySize: 3008
-      Layers: [ 'arn:aws:lambda:eu-central-1:336392948345:layer:AWSDataWrangler-Python39:1' ]
-  AutoRiaToS3AndRDSDailyEventRule:
-    Type: AWS::Events::Rule
-    Properties:
-      Description: "AutoRia To S3 and RDS Daily Event Rule"
-      Name: auto_ria_to_s3_and_rds_daily_rule
-      ScheduleExpression: 'cron(45 20 * * ? *)'
-      State: "ENABLED"
-      Targets:
-        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:auto_ria_to_s3_and_rds_daily'
-          Id: "AutoRiaEventRule"
-  PermissionForEventsToInvokeLambdaAutoRiaToS3AndRDSDaily:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: 'auto_ria_to_s3_and_rds_daily'
-      Action: "lambda:InvokeFunction"
-      Principal: "events.amazonaws.com"
-      SourceArn:
-        Fn::GetAtt:
-          - "AutoRiaToS3AndRDSDailyEventRule"
-          - "Arn"
 
   LambdaStartRDS:
     Type: AWS::Lambda::Function
@@ -93,12 +11,15 @@ Resources:
       FunctionName: ts_rds_start_lambda
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/rds_start.zip
+        S3Key: auto_ria_src/lambda/rds_start_lambda.zip
       Runtime: python3.8
       Timeout: 300
       MemorySize: 3008
-
-
+      Environment:
+        Variables:
+          KEY: DEV-TEST
+          REGION: eu-central-1
+          VALUE: Auto-Shutdown
   RDSStartEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -128,10 +49,15 @@ Resources:
       FunctionName: ts_rds_stop_lambda
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/rds_stop.zip
+        S3Key: auto_ria_src/lambda/rds_stop_lambda.zip
       Runtime: python3.8
       Timeout: 300
       MemorySize: 3008
+      Environment:
+        Variables:
+          KEY: DEV-TEST
+          REGION: eu-central-1
+          VALUE: Auto-Shutdown
   RDSStopEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -140,7 +66,7 @@ Resources:
       ScheduleExpression: 'cron(10 21 ? * * *)'
       State: "ENABLED"
       Targets:
-        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:ts_rds_stop_lambda'
+        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:rds_stop_lambda'
           Id: "RDSStopEventRule"
   PermissionForEventsToInvokeLambdaStopRDS:
     Type: AWS::Lambda::Permission
@@ -152,4 +78,3 @@ Resources:
         Fn::GetAtt:
           - "RDSStopEventRule"
           - "Arn"
-
