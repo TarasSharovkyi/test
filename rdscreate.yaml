@@ -70,16 +70,16 @@ Resources:
       PubliclyAccessible: True
       MultiAZ: False
 
-  YelpFromInputToTableviewJsonsToS3:
+  LambdaAutoRiaToS3AndRDSDaily:
     Type: AWS::Lambda::Function
     Properties:
       Handler: lambda_function.lambda_handler
       Role: arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u
-      FunctionName: yelp_business_to_parquet_gha
+      FunctionName: auto_ria_to_s3_and_rds_daily
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: lambda/yelp_business_to_parquet.zip
+        S3Key: auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
       Runtime: python3.9
-      Timeout: 180
+      Timeout: 300
       MemorySize: 3008
       Layers: [ 'arn:aws:lambda:eu-central-1:336392948345:layer:AWSDataWrangler-Python39:1' ]

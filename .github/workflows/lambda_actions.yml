@@ -21,8 +21,8 @@ jobs:
           aws-region: eu-central-1
       - name: data_transfer
         run: |
-          zip -j yelp_business_to_parquet.zip yelp_business_to_parquet.py
-          aws s3 cp yelp_business_to_parquet.zip s3://ts-mybucket-001/lambda/yelp_business_to_parquet.zip
+          zip -j auto_ria_to_s3_and_rds_daily.zip lambda_ingestion.py
+          aws s3 cp auto_ria_to_s3_and_rds_daily.zip s3://ts-mybucket-001/auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
       - name: deploy
         run: |
-           aws cloudformation deploy --stack-name ghaStack --template-file rdscreate.yaml --region eu-central-1
+           aws cloudformation deploy --stack-name ghaStack --template-file lambda_event.yaml --region eu-central-1
