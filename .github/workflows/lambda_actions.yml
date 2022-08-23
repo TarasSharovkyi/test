@@ -18,6 +18,18 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
+      - name: lambda_ingestion_transfer
+        run: |
+          zip -j auto_ria_to_s3_and_rds_daily.zip lambda_ingestion.py
+          aws s3 cp auto_ria_to_s3_and_rds_daily.zip s3://ts-mybucket-001/auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
+      - name: rds_start_transfer
+        run: |
+          zip -j rds_start.zip rds_start.py
+          aws s3 cp rds_start.zip s3://ts-mybucket-001/auto_ria_src/lambda/rds_start.zip
+      - name: rds_stop_transfer
+        run: |
+          zip -j rds_stop.zip rds_stop.py
+          aws s3 cp rds_stop.zip s3://ts-mybucket-001/auto_ria_src/lambda/rds_stop.zip
       - name: deploy
         run: |
-           aws cloudformation deploy --stack-name ghaStack --template-file lambda_event.yaml --region eu-central-1
+          aws cloudformation deploy --stack-name ghaStack --template-file rds_create.yaml --region eu-central-1
