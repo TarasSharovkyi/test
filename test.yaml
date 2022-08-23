@@ -51,25 +51,6 @@ Parameters:
       ConstraintDescription: must contain only alphanumeric characters.
 
 Resources:
-  AutoRiaRDSPostgreSQL:
-    Type: 'AWS::RDS::DBInstance'
-    Properties:
-      AllocatedStorage: !Ref DBAllocatedStorage
-      AllowMajorVersionUpgrade: False
-      AutoMinorVersionUpgrade: False
-      Engine: postgres
-      EngineVersion: "14.2"
-      DBInstanceIdentifier: 'ria-db-postgres'
-      MasterUsername: !Ref DBUsername
-      MasterUserPassword: !Ref DBPassword
-      DBInstanceClass: !Ref DBInstanceClass
-      DBName: !Ref DBName
-      Port: 5432
-      VPCSecurityGroups: ['sg-0b04576c8b8a52331']
-      AvailabilityZone: 'eu-central-1c'
-      PubliclyAccessible: True
-      MultiAZ: False
-
   LambdaAutoRiaToS3AndRDSDaily:
     Type: AWS::Lambda::Function
     Properties:

@@ -1,23 +1,35 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Lambda Event Rule CF Template
 Resources:
-  EventRuleNewCustomer:
+  LambdaStartRDS:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Role: arn:aws:iam::062261762656:role/service-role/yelp_reader_lambda-role-ic07vv5u
+      FunctionName: ts_rds_start_lambda
+      Code:
+        S3Bucket: ts-mybucket-001
+        S3Key: auto_ria_src/lambda/rds_start.zip
+      Runtime: python3.8
+      Timeout: 300
+      MemorySize: 3008
+  RDSStartEventRule:
     Type: AWS::Events::Rule
     Properties:
-      Description: "New customer event rule"
-      Name: gha-event
-      ScheduleExpression: 'cron(45 20 * * ? *)'
+      Description: "RDS Start Daily Event Rule"
+      Name: ts_rds_start_daily_rule
+      ScheduleExpression: 'cron(00 20 ? * * *)'
       State: "ENABLED"
       Targets:
-        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:yelp_business_to_parquet'
-          Id: "NewCustomer"
-  PermissionForEventsToInvokeLambda:
+        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:ts_rds_start_lambda'
+          Id: "RDSStartEventRule"
+  PermissionForEventsToInvokeLambdaStartRDS:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: 'yelp_business_to_parquet'
+      FunctionName: 'ts_rds_start_lambda'
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn:
         Fn::GetAtt:
-          - "EventRuleNewCustomer"
-          - "Arn"
+            - "RDSStartEventRule"
+            - "Arn"
