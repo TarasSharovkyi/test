@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description:
+Description: Lambda Event Rule CF Template
 Resources:
   EventRuleNewCustomer:
     Type: AWS::Events::Rule
