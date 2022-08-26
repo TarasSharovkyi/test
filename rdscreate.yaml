@@ -190,7 +190,6 @@ Resources:
         Fn::GetAtt:
           - "RDSStopEventRule"
           - "Arn"
-          -
 
   MetabaseOnEc2Instance:
     Type: AWS::EC2::Instance
