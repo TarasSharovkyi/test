@@ -190,3 +190,13 @@ Resources:
         Fn::GetAtt:
           - "RDSStopEventRule"
           - "Arn"
+          -
+
+  MetabaseOnEc2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0355094c26698af52"
+      KeyName: "ec2_p3"
+      SecurityGroupIds: [ "sg-0b04576c8b8a52331" ]
+      InstanceType: "t2.micro"
+      SubnetId: "subnet-04f37796f05ab87ac"
