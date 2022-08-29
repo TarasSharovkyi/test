@@ -19,7 +19,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
-      - name: ingestion_lambda_transfer
+      - name: cloudformation_template_transfer
         run: |
           aws s3 cp deploy_stack.yml s3://ts-mybucket-001/auto_ria_src/cf_templates/deploy_stack.yml
 
