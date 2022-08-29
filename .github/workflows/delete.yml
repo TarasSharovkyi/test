@@ -1,4 +1,4 @@
-name: DeployStack
+name: DeleteStack
 
 on:
   delete
