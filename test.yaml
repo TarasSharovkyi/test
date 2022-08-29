@@ -28,7 +28,7 @@ Resources:
     Properties:
       Description: "AutoRia To S3 and RDS Daily Event Rule"
       Name: auto_ria_to_s3_and_rds_daily_rule
-      ScheduleExpression: 'cron(45 20 * * ? *)'
+      ScheduleExpression: 'cron(23 18 * * ? *)'
       State: "ENABLED"
       Targets:
         - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:auto_ria_to_s3_and_rds_daily'
