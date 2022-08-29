@@ -61,7 +61,7 @@ Resources:
       Engine: postgres
       EngineVersion: "14.2"
       DBInstanceIdentifier: 'ria-db-postgres'
-      DeleteAutomatedBackups: False
+      DeleteAutomatedBackups: True
       MasterUsername: !Ref DBUsername
       MasterUserPassword: !Ref DBPassword
       DBInstanceClass: !Ref DBInstanceClass
