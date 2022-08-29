@@ -9,6 +9,7 @@ import ast
 
 s3 = boto3.resource('s3')
 
+""" THIS IS TEST """
 
 def get_objects_names_from_bucket(bucket, prefix=None):
     s3_bucket = s3.Bucket(bucket)

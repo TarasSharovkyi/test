@@ -24,18 +24,23 @@ jobs:
       - name: cloudformation_template_transfer
         run: |
           aws s3 cp deploy_stack.yaml s3://ts-mybucket-001/auto_ria_src/cf_templates/deploy_stack.yaml
-      - name: ingestion_lambda_transfer
+          aws cloudformation deploy --stack-name ghaStack --template-file test.yaml
+        continue-on-error: true
+      - name: ingestion_lambda_transfer_and_update
         run: |
           zip -j auto_ria_to_s3_and_rds_daily.zip lambda_ingestion.py
           aws s3 cp auto_ria_to_s3_and_rds_daily.zip s3://ts-mybucket-001/auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
           aws lambda update-function-code --function-name auto_ria_to_s3_and_rds_daily --zip-file  fileb://auto_ria_to_s3_and_rds_daily.zip
-      - name: rds_start_lambda_transfer
+        continue-on-error: true
+      - name: rds_start_lambda_transfer_and_update
         run: |
           zip -j rds_start.zip rds_start.py
           aws s3 cp rds_start.zip s3://ts-mybucket-001/auto_ria_src/lambda/rds_start.zip
           aws lambda update-function-code --function-name rds_start --zip-file  fileb://rds_start.zip
-      - name: rds_stop_lambda_transfer
+        continue-on-error: true
+      - name: rds_stop_lambda_transfer_and_update
         run: |
           zip -j rds_stop.zip rds_stop.py
           aws s3 cp rds_stop.zip s3://ts-mybucket-001/auto_ria_src/lambda/rds_stop.zip
           aws lambda update-function-code --function-name rds_stop --zip-file  fileb://rds_stop.zip
+        continue-on-error: true
