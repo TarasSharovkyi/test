@@ -33,4 +33,4 @@ jobs:
           aws s3 cp rds_stop.zip s3://ts-mybucket-001/auto_ria_src/lambda/rds_stop.zip
       - name: update_stack
         run: |
-          aws cloudformation update-stack --stack-name ghaStack --use-previous-template
+          aws cloudformation update-stack --stack-name ghaStack --template-url ./deploy_stack
