@@ -7,9 +7,15 @@ jobs:
   delete_ria_stack:
     runs-on: ubuntu-latest
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
       - name: delete_stack
         run: |
-          aws cloudformation delete-stack --stack-name ghaStack --region eu-central-1
+          aws cloudformation delete-stack --stack-name ghaStack
       - name: delete_dat_from_s3
         run: |
           aws s3 rm -r s3://ts-mybucket-001/auto_ria_src/
