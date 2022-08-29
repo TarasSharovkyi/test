@@ -16,6 +16,6 @@ jobs:
       - name: delete_stack
         run: |
           aws cloudformation delete-stack --stack-name ghaStack
-      - name: delete_dat_from_s3
+      - name: delete_data_from_s3
         run: |
           aws s3 rm s3://ts-mybucket-001/auto_ria_src/ --recursive

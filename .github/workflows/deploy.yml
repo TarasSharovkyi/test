@@ -1,9 +1,7 @@
 name: DeployStack
 
 on:
-  push:
-    branches:
-    - master
+  [workflow_dispatch]
 jobs:
   deploy_lambda:
     runs-on: ubuntu-latest
