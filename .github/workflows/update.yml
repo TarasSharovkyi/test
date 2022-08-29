@@ -21,6 +21,10 @@ jobs:
           aws-region: eu-central-1
       - name: ingestion_lambda_transfer
         run: |
+          aws s3 cp deploy_stack.yml s3://ts-mybucket-001/auto_ria_src/cf_templates/deploy_stack.yml
+
+      - name: ingestion_lambda_transfer
+        run: |
           zip -j auto_ria_to_s3_and_rds_daily.zip lambda_ingestion.py
           aws s3 cp auto_ria_to_s3_and_rds_daily.zip s3://ts-mybucket-001/auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
       - name: rds_start_lambda_transfer
@@ -33,4 +37,4 @@ jobs:
           aws s3 cp rds_stop.zip s3://ts-mybucket-001/auto_ria_src/lambda/rds_stop.zip
       - name: update_stack
         run: |
-          aws cloudformation update-stack --stack-name ghaStack --template-url ./deploy_stack
+          aws cloudformation update-stack --stack-name ghaStack --template-url s3://ts-mybucket-001/auto_ria_src/cf_templates/deploy_stack.yml
