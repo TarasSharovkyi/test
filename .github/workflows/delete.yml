@@ -4,7 +4,7 @@ on:
   [workflow_dispatch]
 
 jobs:
-  deploy_lambda:
+  delete_ria_stack:
     runs-on: ubuntu-latest
     steps:
       - name: delete_stack
