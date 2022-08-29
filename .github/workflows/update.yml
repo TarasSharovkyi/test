@@ -24,7 +24,6 @@ jobs:
       - name: cloudformation_template_transfer
         run: |
           aws s3 cp deploy_stack.yaml s3://ts-mybucket-001/auto_ria_src/cf_templates/deploy_stack.yaml
-
       - name: ingestion_lambda_transfer
         run: |
           zip -j auto_ria_to_s3_and_rds_daily.zip lambda_ingestion.py
