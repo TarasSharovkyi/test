@@ -1,0 +1,15 @@
+name: DeployStack
+
+on:
+  delete
+
+jobs:
+  deploy_lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - name: delete_stack
+        run: |
+          aws cloudformation delete-stack --stack-name ghaStack --region eu-central-1
+      - name: delete_dat_from_s3
+        run: |
+          aws s3 rm -r s3://ts-mybucket-001/auto_ria_src/
