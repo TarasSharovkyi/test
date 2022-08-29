@@ -21,7 +21,7 @@ jobs:
           aws-region: eu-central-1
       - name: cloudformation_template_transfer
         run: |
-          aws s3 cp deploy_stack.yml s3://ts-mybucket-001/auto_ria_src/cf_templates/deploy_stack.yml
+          aws s3 cp deploy_stack.yaml s3://ts-mybucket-001/auto_ria_src/cf_templates/deploy_stack.yaml
 
       - name: ingestion_lambda_transfer
         run: |
