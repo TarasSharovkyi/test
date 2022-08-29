@@ -5,6 +5,8 @@ on:
     branches:
       - 'master'
 
+  workflow_dispatch:
+
 jobs:
   update_ria_stack:
     runs-on: ubuntu-latest
@@ -37,4 +39,4 @@ jobs:
           aws s3 cp rds_stop.zip s3://ts-mybucket-001/auto_ria_src/lambda/rds_stop.zip
       - name: update_stack
         run: |
-          aws cloudformation update-stack --stack-name ghaStack --template-url https://s3.amazonaws.com/ts-mybucket-001/auto_ria_src/cf_templates/deploy_stack.yml
+          aws cloudformation update-stack --stack-name ghaStack --use-previous-template
