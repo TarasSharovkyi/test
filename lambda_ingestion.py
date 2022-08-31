@@ -1,14 +1,14 @@
 import os
-import requests
-from bs4 import BeautifulSoup
+import calendar
+import time
+import re
+import json
 import datetime
 from datetime import date
-import json
-import re
+import requests
+from bs4 import BeautifulSoup
 import boto3
 import psycopg2
-import time
-import calendar
 
 
 def translate_engine_type(cars: list, all_engine_types: dict) -> list:
@@ -16,10 +16,10 @@ def translate_engine_type(cars: list, all_engine_types: dict) -> list:
     this method replaces cyrillic engine fuel type to English
     """
     for car in cars:
-        for k, v in car.items():
-            if k == 'engine_type' and v in all_engine_types.keys():
-                v = all_engine_types[v]
-                car.update({k: v})
+        for key, value in car.items():
+            if key == 'engine_type' and value in all_engine_types.keys():
+                value = all_engine_types[value]
+                car.update({key: value})
 
     return cars
 
@@ -29,10 +29,10 @@ def translate_gearbox_type(cars: list, all_gearbox_types: dict) -> list:
     this method replaces cyrillic gearbox type to English
     """
     for car in cars:
-        for k, v in car.items():
-            if k == 'gearbox_type' and v in all_gearbox_types.keys():
-                v = all_gearbox_types[v]
-                car.update({k: v})
+        for key, value in car.items():
+            if key == 'gearbox_type' and value in all_gearbox_types.keys():
+                value = all_gearbox_types[value]
+                car.update({key: value})
 
     return cars
 
@@ -58,17 +58,20 @@ def get_data_from_source(page_number: int):
     """
     Parser method
     """
-    r = requests.get(
-        f'https://auto.ria.com/uk/search/?indexName=auto&categories.main.id=1&country.import.usa.not=-1&price.currency=1&top=2&abroad.not=0&custom.not=-1&page={page_number}&size=100'
+    requested_data = requests.get(
+        f'https://auto.ria.com/uk/search/'
+        f'?indexName=auto&categories.main.id=1&country.import.usa.not=-1&price.currency=1'
+        f'&top=2&abroad.not=0&custom.not=-1&page={page_number}&size=100'
     )
 
-    soup = BeautifulSoup(r.content, 'html.parser')
+    soup = BeautifulSoup(requested_data.content, 'html.parser')
     items = soup.body.find("div", class_='app-content').find_all("section", class_='ticket-item')
 
     return items
 
 
-def process_data_to_tableview(today, my_date, week_num: int, all_engine_types: dict, two_word_car_brands: dict):
+def process_data_to_tableview(today, my_date, week_num: int,
+                              all_engine_types: dict, two_word_car_brands: dict):
     """
     this method extracts data from a source,
     transforms engine types, gearbox types, 2-word brand names etc.
@@ -91,7 +94,7 @@ def process_data_to_tableview(today, my_date, week_num: int, all_engine_types: d
 
                 year = str.strip(item.find('a', class_='address').text)
 
-                mileage_loc_engine_gear = re.split('\s{3,}',
+                mileage_loc_engine_gear = re.split('s{3,}',
                                                    str.strip(item.find('ul', class_="unstyle characteristic").text))
 
                 engine_volume = mileage_loc_engine_gear[2].split(', ')
@@ -135,17 +138,19 @@ def process_data_to_tableview(today, my_date, week_num: int, all_engine_types: d
     return cars
 
 
-def write_daily_to_s3(s3, bucket: str, prefix: str, object_name: str, data_to_write: [list, dict], week_number: int):
+def write_daily_to_s3(s3_resource, bucket: str, prefix: str,
+                      object_name: str, data_to_write: [list, dict], week_number: int):
     """
     the goal of this method is to write data to S3 bucket as json objects
     """
-    s3.Bucket(bucket).put_object(Key=f'daily_data/{prefix}/week_#{week_number}/{object_name}.json',
+    s3_resource.Bucket(bucket).put_object(Key=f'daily_data/{prefix}/week_#{week_number}/{object_name}.json',
                                  Body=json.dumps(data_to_write, indent=4))
 
 
 def get_app_execution_data(today, start_time: float, cars: list) -> dict:
     """
-    this is a helper method. Its purpose is to collect script execution data into a dictionary for further use
+    this is a helper method. Its purpose is to
+    collect script execution data into a dictionary for further use
     """
     exec_date = today.strftime("%m-%d-%y")
     exec_time = time.time() - start_time
@@ -165,10 +170,16 @@ def get_rds_connection(host: str, database: str, user: str, password: str, port:
 def load_to_rds(connection, table: str, cars: list):
     """
     A method for working with a database.
-    The presence of the table in the database is checked and, if necessary, a creation query is executed.
-    A query to write data to the database in the specified table is also executed.
+    The presence of the table in the database is checked and,
+    if necessary, a creation query is executed.
+    A query to write data to the database
+    in the specified table is also executed.
     """
-    crate_table_query = f'CREATE TABLE IF NOT EXISTS {table} (date varchar(10), day_of_week varchar(25), week_number integer, link varchar(255), brand varchar(255), model varchar(255), year_of_manufacture integer, engine_type varchar(50), engine_volume float, gearbox_type varchar(50), mileage integer, price_usd integer, location varchar(255), PRIMARY KEY(link))'
+    crate_table_query = f'CREATE TABLE IF NOT EXISTS {table} ' \
+                        f'(date varchar(10), day_of_week varchar(25), week_number integer, link varchar(255), ' \
+                        f'brand varchar(255), model varchar(255), year_of_manufacture integer, engine_type varchar(50), ' \
+                        f'engine_volume float, gearbox_type varchar(50), mileage integer, price_usd integer, ' \
+                        f'location varchar(255), PRIMARY KEY(link))'
 
     try:
         # Get cursor object from the database connection
@@ -178,7 +189,10 @@ def load_to_rds(connection, table: str, cars: list):
         # INSERT all daily data into table and ignore 'link' duplicates
         for car in cars:
             cur.execute(
-                f'INSERT INTO {table} (date, day_of_week, week_number, link, brand, model, year_of_manufacture, engine_type, engine_volume, gearbox_type, mileage, price_usd, location) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT (link) DO NOTHING',
+                f'INSERT INTO {table} (date, day_of_week, week_number, link, brand, model, year_of_manufacture, '
+                f'engine_type, engine_volume, gearbox_type, mileage, price_usd, location) '
+                f'VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) '
+                f'ON CONFLICT (link) DO NOTHING',
                 (car['date'], car['day_of_week'], car['week_number'], car['link'], car['brand'], car['model'],
                  car['year_of_manufacture'],
                  car['engine_type'], car['engine_volume'], car['gearbox_type'], car['mileage'], car['price_usd'],
@@ -192,18 +206,22 @@ def load_to_rds(connection, table: str, cars: list):
         print(f'ERROR --------->>>>    Failed to connect to Database! -->>  {error}')
 
 
-def get_data_from_s3(s3, s3_bucket: str, object_name: str) -> dict:
+def get_data_from_s3(s3_resource, s3_bucket: str, object_name: str) -> dict:
     """
-    some data is stored in S3 bucket. This method extracts it from there and returns it in the required format
+    some data is stored in S3 bucket.
+    This method extracts it from there and returns it in the required format
     """
-    obj = s3.Object(bucket_name=s3_bucket, key=f'src/{object_name}.json').get()
+    obj = s3_resource.Object(bucket_name=s3_bucket, key=f'src/{object_name}.json').get()
     data = obj['Body'].read().decode('utf-8')
     data = json.loads(data)
 
     return data
 
 
-def lambda_handler(event, context):
+def lambda_handler():
+    """
+    SOMETHING
+    """
     # database credentials
     database_host = os.environ['DB_HOST']
     database = os.environ['DATABASE']
@@ -216,18 +234,18 @@ def lambda_handler(event, context):
 
     today = date.today()
     my_date = datetime.date.today()
-    year, week_num, day_of_week = my_date.isocalendar()
+    week_num = my_date.isocalendar()
     current_date = today.strftime("%m-%d-%y")
     s3_bucket = os.environ['S3_BUCKET']
-    s3 = boto3.resource('s3')
+    s3_resource = boto3.resource('s3')
 
     # executing methods to extract the required data from S for other methods to work
-    all_engine_types = get_data_from_s3(s3=s3, s3_bucket=s3_bucket, object_name='all_engine_types')
-    all_gearbox_types = get_data_from_s3(s3=s3, s3_bucket=s3_bucket, object_name='all_gearbox_types')
-    two_word_car_brands = get_data_from_s3(s3=s3, s3_bucket=s3_bucket, object_name='two_word_car_brands')
+    all_engine_types = get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='all_engine_types')
+    all_gearbox_types = get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='all_gearbox_types')
+    two_word_car_brands = get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='two_word_car_brands')
 
     # extract data about all items from the source
-    cars = process_data_to_tableview(today, my_date, week_num=week_num, all_engine_types=all_engine_types,
+    cars = process_data_to_tableview(today, my_date, week_num=week_num.week, all_engine_types=all_engine_types,
                                      two_word_car_brands=two_word_car_brands)
 
     # data transformations
@@ -238,10 +256,10 @@ def lambda_handler(event, context):
     exec_data = get_app_execution_data(today, start_time, cars)
 
     # Load daily data to S3
-    write_daily_to_s3(s3=s3, bucket=s3_bucket, prefix='data', object_name=current_date, data_to_write=cars,
-                      week_number=week_num)
-    write_daily_to_s3(s3=s3, bucket=s3_bucket, prefix='exec', object_name=current_date, data_to_write=exec_data,
-                      week_number=week_num)
+    write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket, prefix='data', object_name=current_date, data_to_write=cars,
+                      week_number=week_num.week)
+    write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket, prefix='exec', object_name=current_date, data_to_write=exec_data,
+                      week_number=week_num.week)
 
     # load daily data to RDS
     connection = get_rds_connection(host=database_host, database=database, user=database_user, password=database_pass,
