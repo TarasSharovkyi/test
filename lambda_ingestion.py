@@ -102,7 +102,8 @@ def process_data_to_tableview(today, my_date, week_num: int,
 
                 mileage_loc_engine_gear = re.split('s{3,}',
                                                    str.strip(
-                                                       item.find('ul', class_="unstyle characteristic")
+                                                       item.find('ul',
+                                                                 class_="unstyle characteristic")
                                                            .text))
 
                 engine_volume = mileage_loc_engine_gear[2].split(', ')
