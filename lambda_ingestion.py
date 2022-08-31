@@ -1,3 +1,6 @@
+"""
+docstring
+"""
 from io import BytesIO
 import json
 import awswrangler as wr
@@ -71,8 +74,13 @@ def transform_business_hours_to_table_view(list_of_dicts):
     """
     data = list_of_dicts
 
-    hours_none = {'Monday': None, 'Tuesday': None, 'Wednesday': None, 'Thursday': None, 'Friday': None,
-                  'Saturday': None, 'Sunday': None}
+    hours_none = {'Monday': None,
+                  'Tuesday': None,
+                  'Wednesday': None,
+                  'Thursday': None,
+                  'Friday': None,
+                  'Saturday': None,
+                  'Sunday': None}
     replacement_keys = {
         'Monday': 'working_hours_monday',
         'Tuesday': 'working_hours_tuesday',
