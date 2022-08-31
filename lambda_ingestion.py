@@ -1,6 +1,6 @@
 from io import BytesIO
-import awswrangler as wr
 import json
+import awswrangler as wr
 import boto3
 import pandas
 
@@ -8,6 +8,9 @@ s3 = boto3.resource('s3')
 
 
 def get_objects_names_from_bucket(bucket, prefix=None):
+    """
+    docstring
+    """
     s3_bucket = s3.Bucket(bucket)
     list_of_file_names = []
     output_dict = {}
@@ -28,6 +31,9 @@ def get_objects_names_from_bucket(bucket, prefix=None):
 
 
 def read_from_s3(input_dict, prefix):
+    """
+    docstring
+    """
     output_dict = {}
     list_of_dicts = []
 
@@ -53,10 +59,16 @@ def read_from_s3(input_dict, prefix):
 
 
 def write_to_s3(bucket, data, output_prefix='/'):
+    """
+    docstring
+    """
     wr.s3.to_parquet(df=data, path=f's3://{bucket}{output_prefix}business.parquet')
 
 
 def transform_business_hours_to_table_view(list_of_dicts):
+    """
+    docstring
+    """
     data = list_of_dicts
 
     hours_none = {'Monday': None, 'Tuesday': None, 'Wednesday': None, 'Thursday': None, 'Friday': None,
@@ -85,6 +97,9 @@ def transform_business_hours_to_table_view(list_of_dicts):
 
 
 def lambda_handler():
+    """
+    docstring
+    """
     # Input parameters
     bucket_name = 'ts-mybucket-03'
     read_prefix = 'yelp/'
