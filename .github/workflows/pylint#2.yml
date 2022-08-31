@@ -20,7 +20,7 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint ( lambda_ingestion )
       run: |
-        pylint lambda_ingestion.py.py
+        pylint lambda_ingestion.py
     - name: Analysing the code with pylint ( rds_start )
       run: |
         pylint rds_start.py
