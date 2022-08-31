@@ -96,5 +96,6 @@ def lambda_handler():
 
     return {
         'statusCode': 200,
-        'body': '    ----    >>>>    yelp_academic_dataset_business.json successfully converted to Business.json and Attributes.json'
+        'body': '    ----    >>>>    yelp_academic_dataset_business.json '
+                'successfully converted to Business.json and Attributes.json'
     }
