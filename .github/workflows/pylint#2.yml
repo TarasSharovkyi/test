@@ -22,4 +22,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint ( lambda_ingestion )
       run: |
-        pylint lambda_ingestion.py
+        pylint --fail-under=9 lambda_ingestion.py
