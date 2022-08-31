@@ -1,11 +1,8 @@
+from io import BytesIO
+import awswrangler as wr
 import json
 import boto3
-import awswrangler as wr
 import pandas
-import numpy as np
-import ast
-from io import BytesIO
-import ast
 
 s3 = boto3.resource('s3')
 
@@ -16,14 +13,14 @@ def get_objects_names_from_bucket(bucket, prefix=None):
     output_dict = {}
 
     if prefix is not None:
-        for el in s3_bucket.objects.filter(Prefix=prefix):
-            name = el.key.split('/')[-1]
+        for element in s3_bucket.objects.filter(Prefix=prefix):
+            name = element.key.split('/')[-1]
             if name == 'yelp_academic_dataset_business.json':
                 list_of_file_names.append(name)
     else:
-        for el in s3_bucket.objects.all():
-            if el.key.endswith(('.json')):
-                name = el.key
+        for element in s3_bucket.objects.all():
+            if element.key.endswith(('.json')):
+                name = element.key
                 list_of_file_names.append(name)
 
     output_dict.update({bucket: list_of_file_names})
@@ -41,18 +38,18 @@ def read_from_s3(input_dict, prefix):
             bbb = obj.get()['Body'].read()
 
             with BytesIO(bbb) as bio:
-                df = pandas.DataFrame(bio)
-                dic = df.to_dict()
+                dataframe = pandas.DataFrame(bio)
+                dic = dataframe.to_dict()
                 for i in range(len(dic[0])):
-                    js = json.loads(dic[0][i].decode('utf-8'))
-                    list_of_dicts.append(js)
+                    data_json = json.loads(dic[0][i].decode('utf-8'))
+                    list_of_dicts.append(data_json)
             list_of_dicts = transform_business_hours_to_table_view(list_of_dicts)
 
             output_dict.update({filename: list_of_dicts})
 
-    df = pandas.DataFrame(output_dict['yelp_academic_dataset_business.json'])
+    dataframe = pandas.DataFrame(output_dict['yelp_academic_dataset_business.json'])
 
-    return df
+    return dataframe
 
 
 def write_to_s3(bucket, data, output_prefix='/'):
@@ -75,19 +72,19 @@ def transform_business_hours_to_table_view(list_of_dicts):
     }
     full_hours = {}
 
-    for n in range(len(data)):
-        if data[n]['hours'] is None or 'hours' not in data[n].keys():
-            data[n].update(hours_none)
+    for index in range(len(data)):
+        if data[index]['hours'] is None or 'hours' not in data[index].keys():
+            data[index].update(hours_none)
         else:
             full_hours.update(hours_none)
-            full_hours.update(data[n]['hours'])
-            data[n].update(full_hours)
-            data[n].pop('hours')
+            full_hours.update(data[index]['hours'])
+            data[index].update(full_hours)
+            data[index].pop('hours')
     data = [{replacement_keys.get(k, k): v for k, v in data[n].items()} for n in range(len(data))]
     return data
 
 
-def lambda_handler(event, context):
+def lambda_handler():
     # Input parameters
     bucket_name = 'ts-mybucket-03'
     read_prefix = 'yelp/'
