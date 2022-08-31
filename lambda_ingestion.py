@@ -1,3 +1,6 @@
+"""
+SOMETHING
+"""
 import os
 import calendar
 import time
@@ -90,12 +93,17 @@ def process_data_to_tableview(today, my_date, week_num: int,
 
                 car_brand_and_model_list = get_brand_model_from_item(item, two_word_car_brands)
 
-                mileage = re.findall('[0-9]+', str.lstrip(item.find('li', class_='item-char js-race').text))
+                mileage = re.findall('[0-9]+',
+                                     str.lstrip(
+                                         item.find('li', class_='item-char js-race')
+                                             .text))
 
                 year = str.strip(item.find('a', class_='address').text)
 
                 mileage_loc_engine_gear = re.split('s{3,}',
-                                                   str.strip(item.find('ul', class_="unstyle characteristic").text))
+                                                   str.strip(
+                                                       item.find('ul', class_="unstyle characteristic")
+                                                           .text))
 
                 engine_volume = mileage_loc_engine_gear[2].split(', ')
                 if len(engine_volume) < 2:
@@ -112,7 +120,9 @@ def process_data_to_tableview(today, my_date, week_num: int,
                     volume = engine_volume[1].split()
                     volume = float(volume[0])
 
-                location = str.strip(item.find('li', class_='item-char view-location js-location').text)
+                location = str.strip(
+                    item.find('li', class_='item-char view-location js-location')
+                        .text)
 
                 price = str.replace(item.find('span', class_='size15').text, ' ', '').split('$')
 
@@ -143,8 +153,9 @@ def write_daily_to_s3(s3_resource, bucket: str, prefix: str,
     """
     the goal of this method is to write data to S3 bucket as json objects
     """
-    s3_resource.Bucket(bucket).put_object(Key=f'daily_data/{prefix}/week_#{week_number}/{object_name}.json',
-                                 Body=json.dumps(data_to_write, indent=4))
+    s3_resource.Bucket(bucket)\
+        .put_object(Key=f'daily_data/{prefix}/week_#{week_number}/{object_name}.json',
+                    Body=json.dumps(data_to_write, indent=4))
 
 
 def get_app_execution_data(today, start_time: float, cars: list) -> dict:
@@ -162,7 +173,8 @@ def get_rds_connection(host: str, database: str, user: str, password: str, port:
     """
     This method creates and returns database connection
     """
-    connection = psycopg2.connect(host=host, database=database, user=user, password=password, port=port)
+    connection = psycopg2.connect(host=host, database=database,
+                                  user=user, password=password, port=port)
 
     return connection
 
@@ -176,9 +188,12 @@ def load_to_rds(connection, table: str, cars: list):
     in the specified table is also executed.
     """
     crate_table_query = f'CREATE TABLE IF NOT EXISTS {table} ' \
-                        f'(date varchar(10), day_of_week varchar(25), week_number integer, link varchar(255), ' \
-                        f'brand varchar(255), model varchar(255), year_of_manufacture integer, engine_type varchar(50), ' \
-                        f'engine_volume float, gearbox_type varchar(50), mileage integer, price_usd integer, ' \
+                        f'(date varchar(10), day_of_week varchar(25), ' \
+                        f'week_number integer, link varchar(255), ' \
+                        f'brand varchar(255), model varchar(255), ' \
+                        f'year_of_manufacture integer, engine_type varchar(50), ' \
+                        f'engine_volume float, gearbox_type varchar(50), ' \
+                        f'mileage integer, price_usd integer, ' \
                         f'location varchar(255), PRIMARY KEY(link))'
 
     try:
@@ -189,14 +204,18 @@ def load_to_rds(connection, table: str, cars: list):
         # INSERT all daily data into table and ignore 'link' duplicates
         for car in cars:
             cur.execute(
-                f'INSERT INTO {table} (date, day_of_week, week_number, link, brand, model, year_of_manufacture, '
+                f'INSERT INTO {table} (date, day_of_week, week_number, '
+                f'link, brand, model, year_of_manufacture, '
                 f'engine_type, engine_volume, gearbox_type, mileage, price_usd, location) '
                 f'VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) '
                 f'ON CONFLICT (link) DO NOTHING',
-                (car['date'], car['day_of_week'], car['week_number'], car['link'], car['brand'], car['model'],
+                (car['date'], car['day_of_week'],
+                 car['week_number'], car['link'],
+                 car['brand'], car['model'],
                  car['year_of_manufacture'],
-                 car['engine_type'], car['engine_volume'], car['gearbox_type'], car['mileage'], car['price_usd'],
-                 car['location']))
+                 car['engine_type'], car['engine_volume'],
+                 car['gearbox_type'], car['mileage'],
+                 car['price_usd'], car['location']))
         # Close cursor object
         cur.close()
         # Save all the modifications made since the last commit
@@ -240,12 +259,16 @@ def lambda_handler():
     s3_resource = boto3.resource('s3')
 
     # executing methods to extract the required data from S for other methods to work
-    all_engine_types = get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='all_engine_types')
-    all_gearbox_types = get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='all_gearbox_types')
-    two_word_car_brands = get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='two_word_car_brands')
+    all_engine_types = get_data_from_s3(s3_resource=s3_resource,
+                                        s3_bucket=s3_bucket, object_name='all_engine_types')
+    all_gearbox_types = get_data_from_s3(s3_resource=s3_resource,
+                                         s3_bucket=s3_bucket, object_name='all_gearbox_types')
+    two_word_car_brands = get_data_from_s3(s3_resource=s3_resource,
+                                           s3_bucket=s3_bucket, object_name='two_word_car_brands')
 
     # extract data about all items from the source
-    cars = process_data_to_tableview(today, my_date, week_num=week_num.week, all_engine_types=all_engine_types,
+    cars = process_data_to_tableview(today, my_date, week_num=week_num.week,
+                                     all_engine_types=all_engine_types,
                                      two_word_car_brands=two_word_car_brands)
 
     # data transformations
@@ -256,13 +279,16 @@ def lambda_handler():
     exec_data = get_app_execution_data(today, start_time, cars)
 
     # Load daily data to S3
-    write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket, prefix='data', object_name=current_date, data_to_write=cars,
-                      week_number=week_num.week)
-    write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket, prefix='exec', object_name=current_date, data_to_write=exec_data,
-                      week_number=week_num.week)
+    write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket,
+                      prefix='data', object_name=current_date,
+                      data_to_write=cars, week_number=week_num.week)
+    write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket,
+                      prefix='exec', object_name=current_date,
+                      data_to_write=exec_data, week_number=week_num.week)
 
     # load daily data to RDS
-    connection = get_rds_connection(host=database_host, database=database, user=database_user, password=database_pass,
+    connection = get_rds_connection(host=database_host, database=database,
+                                    user=database_user, password=database_pass,
                                     port=database_port)
     load_to_rds(connection=connection, table=table, cars=cars)
 
