@@ -1,8 +1,8 @@
 """
 SOMETHING
 """
-import boto3
 import os
+import boto3
 
 
 def start_rds_all():
@@ -15,16 +15,18 @@ def start_rds_all():
     client = boto3.client('rds', region_name=region)
     response = client.describe_db_instances()
 
-    v_readReplica = []
+    v_read_replica = []
     for i in response['DBInstances']:
-        readReplica = i['ReadReplicaDBInstanceIdentifiers']
-        v_readReplica.extend(readReplica)
+        read_replica = i['ReadReplicaDBInstanceIdentifiers']
+        v_read_replica.extend(read_replica)
 
     for i in response['DBInstances']:
-        # The if condition below filters aurora clusters from single instance databases as boto3 commands defer to start the aurora clusters.
+        # The if condition below filters aurora clusters
+        # from single instance databases as boto3 commands
+        # defer to start the aurora clusters.
         if i['Engine'] not in ['aurora-mysql', 'aurora-postgresql']:
             # The if condition below filters Read replicas.
-            if i['DBInstanceIdentifier'] not in v_readReplica and len(i['ReadReplicaDBInstanceIdentifiers']) == 0:
+            if i['DBInstanceIdentifier'] not in v_read_replica and len(i['ReadReplicaDBInstanceIdentifiers']) == 0:
                 arn = i['DBInstanceArn']
                 resp2 = client.list_tags_for_resource(ResourceName=arn)
                 # check if the RDS instance is part of the Auto-Shutdown group.
@@ -34,24 +36,28 @@ def start_rds_all():
                     for tag in resp2['TagList']:
                         if tag['Key'] == key and tag['Value'] == value:
                             if i['DBInstanceStatus'] == 'available':
-                                print('{0} DB instance is already available'.format(i['DBInstanceIdentifier']))
+                                print('{0} DB instance is already available'
+                                      .format(i['DBInstanceIdentifier']))
                             elif i['DBInstanceStatus'] == 'stopped':
                                 client.start_db_instance(DBInstanceIdentifier=i['DBInstanceIdentifier'])
                                 print('Started DB Instance {0}'.format(i['DBInstanceIdentifier']))
                             elif i['DBInstanceStatus'] == 'starting':
-                                print('DB Instance {0} is already in starting state'.format(i['DBInstanceIdentifier']))
+                                print('DB Instance {0} is already in starting state'
+                                      .format(i['DBInstanceIdentifier']))
                             elif i['DBInstanceStatus'] == 'stopping':
-                                print('DB Instance {0} is in stopping state. Please wait before starting'.format(
-                                    i['DBInstanceIdentifier']))
+                                print('DB Instance {0} is in stopping state. Please wait before starting'
+                                      .format(i['DBInstanceIdentifier']))
                         elif tag['Key'] != key and tag['Value'] != value:
-                            print('DB instance {0} is not part of autoshutdown'.format(i['DBInstanceIdentifier']))
+                            print('DB instance {0} is not part of autoshutdown'
+                                  .format(i['DBInstanceIdentifier']))
                         elif len(tag['Key']) == 0 or len(tag['Value']) == 0:
-                            print('DB Instance {0} is not part of autoShutdown'.format(i['DBInstanceIdentifier']))
-            elif i['DBInstanceIdentifier'] in v_readReplica:
-                print('DB Instance {0} is a Read Replica.'.format(i['DBInstanceIdentifier']))
+                            print('DB Instance {0} is not part of autoShutdown'
+                                  .format(i['DBInstanceIdentifier']))
+            elif i['DBInstanceIdentifier'] in v_read_replica:
+                print(f'DB Instance {i["DBInstanceIdentifier"]} is a Read Replica.')
             else:
-                print('DB Instance {0} has a read replica. Cannot shutdown & start a database with Read Replica'.format(
-                    i['DBInstanceIdentifier']))
+                print(f'DB Instance {i["DBInstanceIdentifier"]} has a read replica. '
+                      'Cannot shutdown & start a database with Read Replica')
 
     response = client.describe_db_clusters()
     for i in response['DBClusters']:
