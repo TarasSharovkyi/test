@@ -14,7 +14,9 @@ from transform_layer import processor
 
 def get_app_execution_data(today, start_time: float, cars: list) -> dict:
     """
-    this is a helper method. Its purpose is to collect script execution data into a dictionary for further use
+    this is a helper method.
+    Its purpose is to collect script execution data
+    into a dictionary for further use
     """
     exec_date = today.strftime("%m-%d-%y")
     exec_time = time.time() - start_time
@@ -44,13 +46,18 @@ def lambda_handler(event, context):
 
 
     # executing methods to extract the required data from S for other methods to work
-    all_engine_types = s3_logic.get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='all_engine_types')
-    all_gearbox_types = s3_logic.get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='all_gearbox_types')
-    two_word_car_brands = s3_logic.get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='two_word_car_brands')
+    all_engine_types = s3_logic\
+        .get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='all_engine_types')
+    all_gearbox_types = s3_logic\
+        .get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='all_gearbox_types')
+    two_word_car_brands = s3_logic\
+        .get_data_from_s3(s3_resource=s3_resource, s3_bucket=s3_bucket, object_name='two_word_car_brands')
 
 
     # extract data about all items from the source
-    cars = source_reader.process_data_to_tableview(today=today, my_date=my_date, week_num=week_num, all_engine_types=all_engine_types, two_word_car_brands=two_word_car_brands)
+    cars = source_reader.process_data_to_tableview(today=today, my_date=my_date,
+                                                   week_num=week_num, all_engine_types=all_engine_types,
+                                                   two_word_car_brands=two_word_car_brands)
 
 
     # Processor layer in action
@@ -66,16 +73,24 @@ def lambda_handler(event, context):
     exec_data = get_app_execution_data(today, start_time, cars)
 
     # Load daily data to S3
-    s3_logic.write_daily_to_s3(s3=s3_resource, bucket=s3_bucket, prefix='ara/data', object_name=current_date, data_to_write=cars, week_number=week_num[1])
-    s3_logic.write_daily_to_s3(s3=s3_resource, bucket=s3_bucket, prefix='ara/exec', object_name=current_date, data_to_write=exec_data, week_number=week_num[1])
+    s3_logic.write_daily_to_s3(s3=s3_resource, bucket=s3_bucket,
+                               prefix='ara/data', object_name=current_date,
+                               data_to_write=cars, week_number=week_num[1])
+    s3_logic.write_daily_to_s3(s3=s3_resource, bucket=s3_bucket,
+                               prefix='ara/exec', object_name=current_date,
+                               data_to_write=exec_data, week_number=week_num[1])
 
 
     # load daily data to RDS
-    connection = rds_logic.get_rds_connection(host=database_host, database=database, user=database_user, password=database_pass, port=database_port)
-    rds_logic.load_to_rds(connection=connection, table='TEST_DATA', cars=cars)
+    connection = rds_logic.get_rds_connection(host=database_host, database=database,
+                                              user=database_user, password=database_pass,
+                                              port=database_port)
+    rds_logic.load_to_rds(connection=connection, table=table, cars=cars)
 
 
     return {
         'statusCode': 200,
-        'body': json.dumps(f'    ---->>>> EXECUTION DETAILS  {exec_data}. EVENT---->>>>  {event}. CONTEXT---->>>>  {context}')
+        'body': json.dumps(f'    ---->>>> EXECUTION DETAILS  {exec_data}. '
+                           f'EVENT---->>>>  {event}. '
+                           f'CONTEXT---->>>>  {context}')
     }
