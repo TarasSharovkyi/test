@@ -223,7 +223,7 @@ def load_to_rds(connection, table: str, cars: list):
         # Save all the modifications made since the last commit
         connection.commit()
 
-    except (Exception, psycopg2.OperationalError) as error:
+    except psycopg2.OperationalError as error:
         print(f'ERROR --------->>>>    Failed to connect to Database! -->>  {error}')
 
 
