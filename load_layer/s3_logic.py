@@ -16,9 +16,12 @@ def get_data_from_s3(s3_resource, s3_bucket: str, object_name: str) -> dict:
     return data
 
 
-def write_daily_to_s3(s3, bucket: str, prefix: str, object_name: str, data_to_write: [list, dict], week_number: int):
+def write_daily_to_s3(s3_resource, bucket: str, prefix: str,
+                      object_name: str, data_to_write: [list, dict], week_number: int):
     """
     the goal of this method is to write data to S3 bucket as json objects
     """
-    s3.Bucket(bucket).put_object(Key=f'daily_data/{prefix}/week_#{week_number}/{object_name}.json',
-                                 Body=json.dumps(data_to_write, indent=4))
+    s3_resource.Bucket(bucket)\
+        .put_object(Key=f'daily_data/{prefix}/week_#{week_number}/{object_name}.json',
+                    Body=json.dumps(data_to_write,
+                                    indent=4))

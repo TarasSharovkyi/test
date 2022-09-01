@@ -81,10 +81,10 @@ def lambda_handler(event, context):
     exec_data = get_app_execution_data(today, start_time, cars)
 
     # Load daily data to S3
-    s3_logic.write_daily_to_s3(s3=s3_resource, bucket=s3_bucket,
+    s3_logic.write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket,
                                prefix='ara/data', object_name=current_date,
                                data_to_write=cars, week_number=week_num[1])
-    s3_logic.write_daily_to_s3(s3=s3_resource, bucket=s3_bucket,
+    s3_logic.write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket,
                                prefix='ara/exec', object_name=current_date,
                                data_to_write=exec_data, week_number=week_num[1])
 
