@@ -1,12 +1,14 @@
+"""
+SOMETHING
+"""
 import boto3
 import os
-import sys
-import time
-from datetime import datetime, timezone
-from time import gmtime, strftime
 
 
 def start_rds_all():
+    """
+    SOMETHING
+    """
     region = os.environ['REGION']
     key = os.environ['KEY']
     value = os.environ['VALUE']
@@ -77,4 +79,8 @@ def start_rds_all():
 
 
 def lambda_handler(event, context):
+    """
+    SOMETHING
+    """
     start_rds_all()
+    print(f'{event}, {context}')
