@@ -289,10 +289,15 @@ def lambda_handler():
                       data_to_write=exec_data, week_number=week_num.week)
 
     # load daily data to RDS
-    connection = get_rds_connection(host=database_host, database=database,
-                                    user=database_user, password=database_pass,
-                                    port=database_port)
-    load_to_rds(connection=connection, table=table, cars=cars)
+    try:
+        connection = get_rds_connection(host=database_host, database=database,
+                                        user=database_user, password=database_pass,
+                                        port=database_port)
+        load_to_rds(connection=connection, table=table, cars=cars)
+    except psycopg2.OperationalError as error:
+        print(f'         FUCKING ERROR !!!    ----->>>>>>>  {error}')
+
+
 
     return {
         'statusCode': 200,
