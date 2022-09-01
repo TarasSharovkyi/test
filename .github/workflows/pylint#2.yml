@@ -21,4 +21,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint ( lambda_ingestion )
       run: |
-        pylint --fail-under=9 rds_start.py
+        pylint --fail-under=9 lambda_ingestion.py
