@@ -26,7 +26,8 @@ def start_rds_all():
         # defer to start the aurora clusters.
         if i['Engine'] not in ['aurora-mysql', 'aurora-postgresql']:
             # The if condition below filters Read replicas.
-            if i['DBInstanceIdentifier'] not in v_read_replica and len(i['ReadReplicaDBInstanceIdentifiers']) == 0:
+            if i['DBInstanceIdentifier'] not in v_read_replica \
+                    and len(i['ReadReplicaDBInstanceIdentifiers']) == 0:
                 arn = i['DBInstanceArn']
                 resp2 = client.list_tags_for_resource(ResourceName=arn)
                 # check if the RDS instance is part of the Auto-Shutdown group.
@@ -36,9 +37,13 @@ def start_rds_all():
                     for tag in resp2['TagList']:
                         if tag['Key'] == key and tag['Value'] == value:
                             if i['DBInstanceStatus'] == 'available':
-                                print(f'{i["DBInstanceIdentifier"]} DB instance is already available')
+                                print(
+                                    f'{i["DBInstanceIdentifier"]} DB instance is already available'
+                                )
                             elif i['DBInstanceStatus'] == 'stopped':
-                                client.start_db_instance(DBInstanceIdentifier=i['DBInstanceIdentifier'])
+                                client.start_db_instance(
+                                    DBInstanceIdentifier=i['DBInstanceIdentifier']
+                                )
                                 print(f'Started DB Instance {i["DBInstanceIdentifier"]}')
                             elif i['DBInstanceStatus'] == 'starting':
                                 print(f'DB Instance {0} is already in starting state')
@@ -46,9 +51,11 @@ def start_rds_all():
                                 print(f'DB Instance {i["DBInstanceIdentifier"]} '
                                       f'is in stopping state. Please wait before starting')
                         elif tag['Key'] != key and tag['Value'] != value:
-                            print(f'DB instance {i["DBInstanceIdentifier"]} is not part of autoshutdown')
+                            print(f'DB instance {i["DBInstanceIdentifier"]} '
+                                  f'is not part of autoshutdown')
                         elif len(tag['Key']) == 0 or len(tag['Value']) == 0:
-                            print(f'DB Instance {i["DBInstanceIdentifier"]} is not part of autoshutdown')
+                            print(f'DB Instance {i["DBInstanceIdentifier"]} '
+                                  f'is not part of autoshutdown')
             elif i['DBInstanceIdentifier'] in v_read_replica:
                 print(f'DB Instance {i["DBInstanceIdentifier"]} is a Read Replica.')
             else:
@@ -72,7 +79,8 @@ def start_rds_all():
                     elif i['Status'] == 'starting':
                         print(f'cluster {i["DBClusterIdentifier"]} is already in starting state.')
                     elif i['Status'] == 'stopping':
-                        print(f'cluster {i["DBClusterIdentifier"]} is in stopping state. Please wait before starting')
+                        print(f'cluster {i["DBClusterIdentifier"]} is in stopping state.'
+                              f' Please wait before starting')
                 elif tag['Key'] != key and tag['Value'] != value:
                     print(f'DB Cluster {i["DBClusterIdentifier"]} is not part of autoshutdown')
                 else:
