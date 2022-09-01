@@ -64,7 +64,8 @@ def get_data_from_source(page_number: int):
     requested_data = requests.get(
         f'https://auto.ria.com/uk/search/'
         f'?indexName=auto&categories.main.id=1&country.import.usa.not=-1&price.currency=1'
-        f'&top=2&abroad.not=0&custom.not=-1&page={page_number}&size=100'
+        f'&top=2&abroad.not=0&custom.not=-1&page={page_number}&size=100',
+        timeout=60
     )
 
     soup = BeautifulSoup(requested_data.content, 'html.parser')
