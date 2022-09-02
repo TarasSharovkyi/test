@@ -81,26 +81,26 @@ def lambda_handler(event, context):
 
     # script execution data: date, amount of cars, execution time
     exec_data = get_app_execution_data(today, start_time, cars)
-
+    print(cars[:1])
     # Load daily data to S3
-    s3_logic.write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket,
-                               prefix='ara/data', object_name=current_date,
-                               data_to_write=cars, week_number=week_num[1])
-    s3_logic.write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket,
-                               prefix='ara/exec', object_name=current_date,
-                               data_to_write=exec_data, week_number=week_num[1])
+    # s3_logic.write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket,
+    #                            prefix='ara/data', object_name=current_date,
+    #                            data_to_write=cars, week_number=week_num[1])
+    # s3_logic.write_daily_to_s3(s3_resource=s3_resource, bucket=s3_bucket,
+    #                            prefix='ara/exec', object_name=current_date,
+    #                            data_to_write=exec_data, week_number=week_num[1])
 
 
     # load daily data to RDS
-    connection = rds_logic.get_rds_connection(host=database_host, database=database,
-                                              user=database_user, password=database_pass,
-                                              port=database_port)
-    rds_logic.load_to_rds(connection=connection, table=table, cars=cars)
+    # connection = rds_logic.get_rds_connection(host=database_host, database=database,
+    #                                           user=database_user, password=database_pass,
+    #                                           port=database_port)
+    # rds_logic.load_to_rds(connection=connection, table=table, cars=cars)
 
 
     return {
         'statusCode': 200,
         'body': json.dumps(f'    ---->>>> EXECUTION DETAILS  {exec_data}. '
-                           f'EVENT---->>>>  {event}. '
+                           f'EVENT---->>>>  . '
                            f'CONTEXT---->>>>  {context}')
     }
