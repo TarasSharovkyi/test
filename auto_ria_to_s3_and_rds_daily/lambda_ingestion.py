@@ -46,15 +46,15 @@ def lambda_handler(event, context):
 
 
     # executing methods to extract the required data from S for other methods to work
-    all_engine_types = s3_logic\
+    all_engine_types = s3_logic \
         .get_data_from_s3(s3_resource=s3_resource,
                           s3_bucket=s3_bucket,
                           object_name='all_engine_types')
-    all_gearbox_types = s3_logic\
+    all_gearbox_types = s3_logic \
         .get_data_from_s3(s3_resource=s3_resource,
                           s3_bucket=s3_bucket,
                           object_name='all_gearbox_types')
-    two_word_car_brands = s3_logic\
+    two_word_car_brands = s3_logic \
         .get_data_from_s3(s3_resource=s3_resource,
                           s3_bucket=s3_bucket,
                           object_name='two_word_car_brands')
