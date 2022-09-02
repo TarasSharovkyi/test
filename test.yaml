@@ -23,3 +23,23 @@ Resources:
           S3_BUCKET: ts-mybucket-001
           TABLE: auto_ria_analyzer_daily
       Layers: [ 'arn:aws:lambda:eu-central-1:336392948345:layer:AWSDataWrangler-Python39:1' ]
+  AutoRiaToS3AndRDSDailyEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "AutoRia To S3 and RDS Daily Event Rule"
+      Name: auto_ria_to_s3_and_rds_daily_rule
+      ScheduleExpression: 'cron(45 20 * * ? *)'
+      State: "ENABLED"
+      Targets:
+        - Arn: 'arn:aws:lambda:eu-central-1:062261762656:function:auto_ria_to_s3_and_rds_daily'
+          Id: "AutoRiaEventRule"
+  PermissionForEventsToInvokeLambdaAutoRiaToS3AndRDSDaily:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: 'auto_ria_to_s3_and_rds_daily'
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        Fn::GetAtt:
+          - "AutoRiaToS3AndRDSDailyEventRule"
+          - "Arn"
