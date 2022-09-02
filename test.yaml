@@ -22,7 +22,8 @@ Resources:
           DB_USER: postgres
           S3_BUCKET: ts-mybucket-001
           TABLE: auto_ria_analyzer_daily
-      Layers: [ 'arn:aws:lambda:eu-central-1:336392948345:layer:AWSDataWrangler-Python39:1' ]
+      Layers: [ 'arn:aws:lambda:eu-central-1:336392948345:layer:AWSDataWrangler-Python39:1',
+                'arn:aws:lambda:eu-central-1:062261762656:layer:psycopg2-python38:1']
   AutoRiaToS3AndRDSDailyEventRule:
     Type: AWS::Events::Rule
     Properties:
