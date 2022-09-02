@@ -21,7 +21,9 @@ def get_app_execution_data(today, start_time: float, cars: list) -> dict:
     exec_date = today.strftime("%m-%d-%y")
     exec_time = time.time() - start_time
 
-    return {'date': exec_date, 'amount of cars': len(cars), 'exec_time': round(exec_time, 4)}
+    return {'date': exec_date,
+            'amount of cars': len(cars),
+            'exec_time': round(exec_time, 4)}
 
 
 def lambda_handler(event, context):
