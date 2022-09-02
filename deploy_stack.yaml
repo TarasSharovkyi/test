@@ -92,7 +92,7 @@ Resources:
           DB_PORT: 5432
           DB_USER: postgres
           S3_BUCKET: ts-mybucket-001
-          TABLE: daily_auto_ria
+          TABLE: auto_ria_analyzer_daily
       Layers: [ 'arn:aws:lambda:eu-central-1:336392948345:layer:AWSDataWrangler-Python39:1' ]
   AutoRiaToS3AndRDSDailyEventRule:
     Type: AWS::Events::Rule

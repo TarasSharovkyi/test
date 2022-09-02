@@ -15,11 +15,11 @@ Resources:
       MemorySize: 3008
       Environment:
         Variables:
-          DATABASE: postgres
-          DB_HOST: ria-db-postgres.cs1ac7ipvtir.eu-central-1.rds.amazonaws.com
-          DB_PASSWORD: 12345678
+          DATABASE: riadbgha
+          DB_HOST: riadbinstance.cs1ac7ipvtir.eu-central-1.rds.amazonaws.com
+          DB_PASSWORD: postgres
           DB_PORT: 5432
           DB_USER: postgres
           S3_BUCKET: ts-mybucket-001
-          TABLE: daily_auto_ria
+          TABLE: auto_ria_analyzer_daily
       Layers: [ 'arn:aws:lambda:eu-central-1:336392948345:layer:AWSDataWrangler-Python39:1' ]
