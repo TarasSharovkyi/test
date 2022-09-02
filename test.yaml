@@ -9,7 +9,7 @@ Resources:
       FunctionName: auto_ria_to_s3_and_rds_daily
       Code:
         S3Bucket: ts-mybucket-001
-        S3Key: auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
+        ZipFile: auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
       Runtime: python3.9
       Timeout: 300
       MemorySize: 3008

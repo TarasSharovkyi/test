@@ -18,7 +18,7 @@ jobs:
           aws-region: eu-central-1
       - name: lambda_ingestion_transfer
         run: |
-          zip -r auto_ria_to_s3_and_rds_daily.zip auto_ria_to_s3_and_rds_daily/*
+          zip -q -r auto_ria_to_s3_and_rds_daily.zip auto_ria_to_s3_and_rds_daily
           aws s3 cp auto_ria_to_s3_and_rds_daily.zip s3://ts-mybucket-001/auto_ria_src/lambda/auto_ria_to_s3_and_rds_daily.zip
       - name: deploy
         run: |
