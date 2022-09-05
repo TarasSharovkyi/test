@@ -13,10 +13,10 @@ class Processor:
         this method replaces cyrillic engine fuel type to English
         """
         for car in cars:
-            for k, v in car.items():
-                if k == 'engine_type' and v in all_engine_types.keys():
-                    v = all_engine_types[v]
-                    car.update({k: v})
+            for key, value in car.items():
+                if key == 'engine_type' and value in all_engine_types.keys():
+                    value = all_engine_types[value]
+                    car.update({key: value})
 
         return cars
 
@@ -25,9 +25,9 @@ class Processor:
         this method replaces cyrillic gearbox type to English
         """
         for car in cars:
-            for k, v in car.items():
-                if k == 'gearbox_type' and v in all_gearbox_types.keys():
-                    v = all_gearbox_types[v]
-                    car.update({k: v})
+            for key, value in car.items():
+                if key == 'gearbox_type' and value in all_gearbox_types.keys():
+                    value = all_gearbox_types[value]
+                    car.update({key: value})
 
         return cars
