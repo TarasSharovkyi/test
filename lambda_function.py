@@ -7,7 +7,8 @@ import json
 import datetime
 from datetime import date
 import boto3
-from load_layer import s3_logic, rds_logic
+from load_layer.s3_logic import S3Logic
+from load_layer.rds_logic import RDSLogic
 from extract_layer import source_reader
 from transform_layer.processor import Processor
 
@@ -38,15 +39,15 @@ def lambda_handler(event, context):
     start_time = time.time()
 
     # executing methods to extract the required data from S for other methods to work
-    all_engine_types = s3_logic \
+    all_engine_types = S3Logic() \
         .get_data_from_s3(s3_resource=s3_resource,
                           s3_bucket=os.environ['S3_BUCKET'],
                           object_name='all_engine_types')
-    all_gearbox_types = s3_logic \
+    all_gearbox_types = S3Logic() \
         .get_data_from_s3(s3_resource=s3_resource,
                           s3_bucket=os.environ['S3_BUCKET'],
                           object_name='all_gearbox_types')
-    two_word_car_brands = s3_logic \
+    two_word_car_brands = S3Logic() \
         .get_data_from_s3(s3_resource=s3_resource,
                           s3_bucket=os.environ['S3_BUCKET'],
                           object_name='two_word_car_brands')
@@ -76,28 +77,28 @@ def lambda_handler(event, context):
                                        cars=cars)
 
     # Load daily data to S3
-    s3_logic.write_daily_to_s3(s3_resource=s3_resource,
-                               bucket=os.environ['S3_BUCKET'],
-                               prefix='ara/data',
-                               object_name=today.strftime("%m-%d-%y"),
-                               data_to_write=cars,
-                               week_number=week_num[1])
-    s3_logic.write_daily_to_s3(s3_resource=s3_resource,
-                               bucket=os.environ['S3_BUCKET'],
-                               prefix='ara/exec',
-                               object_name=today.strftime("%m-%d-%y"),
-                               data_to_write=exec_data,
-                               week_number=week_num[1])
+    S3Logic().write_daily_to_s3(s3_resource=s3_resource,
+                                bucket=os.environ['S3_BUCKET'],
+                                prefix='ara/data',
+                                object_name=today.strftime("%m-%d-%y"),
+                                data_to_write=cars,
+                                week_number=week_num[1])
+    S3Logic().write_daily_to_s3(s3_resource=s3_resource,
+                                bucket=os.environ['S3_BUCKET'],
+                                prefix='ara/exec',
+                                object_name=today.strftime("%m-%d-%y"),
+                                data_to_write=exec_data,
+                                week_number=week_num[1])
 
     # load daily data to RDS
-    connection = rds_logic.get_rds_connection(host=os.environ['DB_HOST'],
-                                              database=os.environ['DATABASE'],
-                                              user=os.environ['DB_USER'],
-                                              password=os.environ['DB_PASSWORD'],
-                                              port=os.environ['DB_PORT'])
-    rds_logic.load_to_rds(connection=connection,
-                          table=os.environ['TABLE'],
-                          cars=cars)
+    connection = RDSLogic().get_rds_connection(host=os.environ['DB_HOST'],
+                                               database=os.environ['DATABASE'],
+                                               user=os.environ['DB_USER'],
+                                               password=os.environ['DB_PASSWORD'],
+                                               port=os.environ['DB_PORT'])
+    RDSLogic().load_to_rds(connection=connection,
+                           table=os.environ['TABLE'],
+                           cars=cars)
 
     return {
         'statusCode': 200,
