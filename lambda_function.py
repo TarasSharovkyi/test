@@ -6,6 +6,7 @@ import time
 import json
 import datetime
 from datetime import date
+import psycopg2
 import boto3
 from load_layer import s3_logic, rds_logic
 from extract_layer import source_reader
@@ -81,6 +82,7 @@ def lambda_handler(event, context):
 
     # script execution data: date, amount of cars, execution time
     exec_data = get_app_execution_data(today=today, start_time=time.time(), cars=cars)
+
 
     # Load daily data to S3
     s3_logic.write_daily_to_s3(s3_resource=s3_resource, bucket=os.environ['S3_BUCKET'],
