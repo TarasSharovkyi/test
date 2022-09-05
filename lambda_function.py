@@ -62,16 +62,22 @@ def lambda_handler(event, context):
 
 
     # Processor layer in action
-    processor.translate_engine_type(cars=cars, all_engine_types=all_engine_types)
-    processor.translate_gearbox_type(cars=cars, all_gearbox_types=all_gearbox_types)
+    processor.translate_engine_type(cars=cars,
+                                    all_engine_types=all_engine_types)
+    processor.translate_gearbox_type(cars=cars,
+                                     all_gearbox_types=all_gearbox_types)
 
 
     # data transformations
-    processor.translate_engine_type(cars=cars, all_engine_types=all_engine_types)
-    processor.translate_gearbox_type(cars=cars, all_gearbox_types=all_gearbox_types)
+    processor.translate_engine_type(cars=cars,
+                                    all_engine_types=all_engine_types)
+    processor.translate_gearbox_type(cars=cars,
+                                     all_gearbox_types=all_gearbox_types)
 
     # script execution data: date, amount of cars, execution time
-    exec_data = get_app_execution_data(today=today, start_time=start_time, cars=cars)
+    exec_data = get_app_execution_data(today=today,
+                                       start_time=start_time,
+                                       cars=cars)
 
 
     # Load daily data to S3
