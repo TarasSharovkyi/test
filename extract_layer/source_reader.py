@@ -32,7 +32,8 @@ def process_data_to_tableview(today, my_date, week_num: int,
                 mileage_loc_engine_gear = re.split(r'\s{3,}',
                                                    str.strip(
                                                        item.find('ul',
-                                                                 class_="unstyle characteristic").text))
+                                                                 class_="unstyle characteristic")
+                                                           .text))
                 location = str.strip(item.find('li',
                                                class_='item-char view-location js-location').text)
                 price = str.replace(item.find('span', class_='size15').text, ' ', '').split('$')
@@ -79,7 +80,8 @@ def get_data_from_source(page_number: int):
     requested_data = requests.get(
         f'https://auto.ria.com/uk/search/?indexName=auto&categories.main.id=1'
         f'&country.import.usa.not=-1&price.currency=1&top=2'
-        f'&abroad.not=0&custom.not=-1&page={page_number}&size=100'
+        f'&abroad.not=0&custom.not=-1&page={page_number}&size=100',
+        timeout=300
     )
 
     soup = BeautifulSoup(requested_data.content, 'html.parser')
