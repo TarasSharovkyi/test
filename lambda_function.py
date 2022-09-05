@@ -1,5 +1,5 @@
 """
-SOMETHING
+Something will be written here later...
 """
 import os
 import time
@@ -14,9 +14,9 @@ from transform_layer import processor
 
 def get_app_execution_data(today, start_time: float, cars: list) -> dict:
     """
-    this is a helper method.
-    Its purpose is to collect script execution data
-    into a dictionary for further use
+    This is a helper method.
+    Its purpose is to calculate
+    the execution time of the script.
     """
     exec_date = today.strftime("%m-%d-%y")
     exec_time = time.time() - start_time
@@ -28,17 +28,8 @@ def get_app_execution_data(today, start_time: float, cars: list) -> dict:
 
 def lambda_handler(event, context):
     """
-    SOMETHING
+    Something will be written here later...
     """
-    # database credentials
-    # database_host = os.environ['DB_HOST']
-    # database = os.environ['DATABASE']
-    # database_user = os.environ['DB_USER']
-    # database_pass = os.environ['DB_PASSWORD']
-    # database_port = os.environ['DB_PORT']
-    # table = os.environ['TABLE']
-    # s3_bucket = os.environ['S3_BUCKET']
-    # current_date = today.strftime("%m-%d-%y")
     today = date.today()
     my_date = datetime.date.today()
     week_num = my_date.isocalendar()
