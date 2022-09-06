@@ -25,9 +25,9 @@ def process_data_to_tableview(today, my_date, week_num: int,
         if len(items) != 0:
             for item in items:
                 car_brand_and_model_list = get_brand_model_from_item(item, two_word_car_brands)
-                mileage = re.findall('[0-9]+',
-                                     str.lstrip(item.find('li',
-                                                          class_='item-char js-race').text))
+                # mileage = re.findall('[0-9]+',
+                #                      str.lstrip(item.find('li',
+                #                                           class_='item-char js-race').text))
                 year = str.strip(item.find('a', class_='address').text)
                 mileage_loc_engine_gear = re.split(r'\s{3,}',
                                                    str.strip(
@@ -61,7 +61,7 @@ def process_data_to_tableview(today, my_date, week_num: int,
                     'model': car_brand_and_model_list['model'],
                     'year_of_manufacture': int(year[-4:]),
                     'price_usd': int(price[0]),
-                    'mileage': int(mileage[0]) * 1000,
+                    'mileage': get_mileage(item),
                     'engine_type': engine_type,
                     'engine_volume': volume,
                     'gearbox_type': mileage_loc_engine_gear[-1],
@@ -105,3 +105,10 @@ def get_brand_model_from_item(item, two_word_car_brands: dict) -> dict:
         model = ' '.join(brand_model_year[1:])
 
     return {'brand': correct_brand, 'model': model}
+
+
+def get_mileage(item) -> int:
+    mileage = re.findall('[0-9]+', str.lstrip(item.find('li', class_='item-char js-race').text))
+    mileage = int(mileage[0]) * 1000
+
+    return mileage
