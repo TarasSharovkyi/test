@@ -2,12 +2,16 @@
 ALL S3 LOGIC
 """
 import json
+import boto3
+import datetime
 
 
 class S3Logic:
     """
     Something will be written here later...
     """
+    s3_resource = boto3.resource('s3')
+    week_number = datetime.date.today().isocalendar()
 
     def get_data_from_s3(self, s3_resource, s3_bucket: str, object_name: str) -> dict:
         """
@@ -21,12 +25,12 @@ class S3Logic:
 
         return data
 
-    def write_daily_to_s3(self, s3_resource, bucket: str, prefix: str,
-                          object_name: str, data_to_write: [list, dict], week_number: int):
+    def write_daily_to_s3(self, bucket: str, prefix: str,
+                          object_name: str, data_to_write: [list, dict]):
         """
         the goal of this method is to write data to S3 bucket as json objects
         """
-        s3_resource.Bucket(bucket)\
-            .put_object(Key=f'daily_data/{prefix}/week_#{week_number}/{object_name}.json',
+        self.s3_resource.Bucket(bucket)\
+            .put_object(Key=f'daily_data/{prefix}/week_#{self.week_number}/{object_name}.json',
                         Body=json.dumps(data_to_write,
                                         indent=4))
