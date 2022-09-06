@@ -3,9 +3,9 @@ SOMETHING
 """
 import calendar
 import re
+from datetime import date
 import requests
 from bs4 import BeautifulSoup
-from datetime import date
 
 
 class AutoRiaReader:
@@ -14,7 +14,7 @@ class AutoRiaReader:
     """
     date = date.today.strftime("%m-%d-%y")
 
-    def process_data_to_tableview(self, today, my_date, week_num: int,
+    def process_data_to_tableview(self, my_date, week_num: int,
                                   all_engine_types: dict, two_word_car_brands: dict):
         """
         this method extracts data from a source,
@@ -72,7 +72,9 @@ class AutoRiaReader:
         )
 
         soup = BeautifulSoup(requested_data.content, 'html.parser')
-        items = soup.body.find("div", class_='app-content').find_all("section", class_='ticket-item')
+        items = soup.body.find(
+            "div", class_='app-content')\
+            .find_all("section", class_='ticket-item')
 
         return items
 
