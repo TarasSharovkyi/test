@@ -53,11 +53,10 @@ def lambda_handler(event, context):
                           object_name='two_word_car_brands')
 
     # extract data about all items from the source
-    cars = AutoRiaReader().process_data_to_tableview(today,
-                                                    my_date=my_date,
-                                                    week_num=week_num,
-                                                    all_engine_types=all_engine_types,
-                                                    two_word_car_brands=two_word_car_brands)
+    cars = AutoRiaReader().process_data_to_tableview(my_date=my_date,
+                                                     week_num=week_num,
+                                                     all_engine_types=all_engine_types,
+                                                     two_word_car_brands=two_word_car_brands)
 
     # Processor layer in action
     Processor().translate_engine_type(cars=cars,
