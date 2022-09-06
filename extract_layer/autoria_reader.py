@@ -5,9 +5,14 @@ import calendar
 import re
 import requests
 from bs4 import BeautifulSoup
+from datetime import date
 
 
 class AutoRiaReader:
+    """
+    SOMETHING
+    """
+    date = date.today.strftime("%m-%d-%y")
 
     def process_data_to_tableview(self, today, my_date, week_num: int,
                                   all_engine_types: dict, two_word_car_brands: dict):
@@ -26,18 +31,24 @@ class AutoRiaReader:
                 for item in items:
                     cars.append({
                         'week_number': week_num[1],
-                        'date': today.strftime("%m-%d-%y"),
+                        'date': self.date,
                         'day_of_week': calendar.day_name[my_date.weekday()],
                         'link': self.get_link(item),
-                        'brand': self.get_brand_model_from_item(item, two_word_car_brands)['brand'],
-                        'model': self.get_brand_model_from_item(item, two_word_car_brands)['model'],
+                        'brand': self.get_brand_model_from_item(
+                            item,
+                            two_word_car_brands)['brand'],
+                        'model': self.get_brand_model_from_item(
+                            item,
+                            two_word_car_brands)['model'],
                         'year_of_manufacture': self.get_year_of_manufacture(item),
                         'price_usd': self.get_price(item),
                         'mileage': self.get_mileage(item),
-                        'engine_type': self.get_engine_type_and_volume(item,
-                                                                       all_engine_types)['engine_type'],
-                        'engine_volume': self.get_engine_type_and_volume(item,
-                                                                         all_engine_types)['volume'],
+                        'engine_type': self.get_engine_type_and_volume(
+                            item,
+                            all_engine_types)['engine_type'],
+                        'engine_volume': self.get_engine_type_and_volume(
+                            item,
+                            all_engine_types)['volume'],
                         'gearbox_type': self.get_gearbox_type(item),
                         'location': self.get_location(item)
                     })
@@ -51,9 +62,12 @@ class AutoRiaReader:
         Parser method
         """
         requested_data = requests.get(
-            f'https://auto.ria.com/uk/search/?indexName=auto&categories.main.id=1'
-            f'&country.import.usa.not=-1&price.currency=1&top=2'
-            f'&abroad.not=0&custom.not=-1&page={page_number}&size=100',
+            f'https://auto.ria.com/uk/search/?indexName=auto'
+            f'&categories.main.id=1'
+            f'&country.import.usa.not=-1'
+            f'&price.currency=1&top=2'
+            f'&abroad.not=0&custom.not=-1'
+            f'&page={page_number}&size=100',
             timeout=300
         )
 
