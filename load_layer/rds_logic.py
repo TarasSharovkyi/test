@@ -8,8 +8,9 @@ class RDSLogic:
     """
     Something will be written here later...
     """
+    db_port = 5432
 
-    def get_rds_connection(self, host: str, database: str, user: str, password: str, port: str):
+    def get_rds_connection(self, host: str, database: str, user: str, password: str):
         """
         This method creates and returns database connection
         """
@@ -17,7 +18,7 @@ class RDSLogic:
                                       database=database,
                                       user=user,
                                       password=password,
-                                      port=port)
+                                      port=self.db_port)
 
         return connection
 
@@ -69,4 +70,3 @@ class RDSLogic:
 
         except psycopg2.OperationalError as error:
             print(f'ERROR --------->>>>    Failed to connect to Database! -->>  {error}')
-

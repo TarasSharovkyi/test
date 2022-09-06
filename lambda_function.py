@@ -90,8 +90,7 @@ def lambda_handler(event, context):
     connection = RDSLogic().get_rds_connection(host=os.environ['DB_HOST'],
                                                database=os.environ['DATABASE'],
                                                user=os.environ['DB_USER'],
-                                               password=os.environ['DB_PASSWORD'],
-                                               port=os.environ['DB_PORT'])
+                                               password=os.environ['DB_PASSWORD'])
     RDSLogic().load_to_rds(connection=connection,
                            table=os.environ['TABLE'],
                            cars=cars)
