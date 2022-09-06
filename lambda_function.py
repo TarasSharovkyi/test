@@ -6,7 +6,7 @@ import time
 import json
 import datetime
 from datetime import date
-import boto3
+# import boto3
 from load_layer.s3_loader import S3Loader
 from load_layer.rds_loader import RDSLoader
 from extract_layer.autoria_reader import AutoRiaReader
