@@ -31,7 +31,7 @@ jobs:
     - name: Analysing the code with pylint ( rds_logic )
       run: |
         pylint --fail-under=10.0 load_layer/rds_logic.py
-    - name: Analysing the code with pylint ( source_reader )
+    - name: Analysing the code with pylint ( autoria_reader )
       run: |
-        pylint --fail-under=10.0 extract_layer/source_reader.py
+        pylint --fail-under=10.0 extract_layer/autoria_reader.py
         
