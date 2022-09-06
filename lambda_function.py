@@ -35,7 +35,7 @@ def lambda_handler(event, context):
     today = date.today()
     my_date = datetime.date.today()
     week_num = my_date.isocalendar()
-    s3_resource = boto3.resource('s3')
+    # s3_resource = boto3.resource('s3')
     # script start time
     start_time = time.time()
 
