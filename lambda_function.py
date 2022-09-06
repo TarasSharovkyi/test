@@ -41,16 +41,13 @@ def lambda_handler(event, context):
 
     # executing methods to extract the required data from S for other methods to work
     all_engine_types = S3Reader() \
-        .get_data_from_s3(s3_resource=s3_resource,
-                          s3_bucket=os.environ['S3_BUCKET'],
+        .get_data_from_s3(s3_bucket=os.environ['S3_BUCKET'],
                           object_name='all_engine_types')
     all_gearbox_types = S3Reader() \
-        .get_data_from_s3(s3_resource=s3_resource,
-                          s3_bucket=os.environ['S3_BUCKET'],
+        .get_data_from_s3(s3_bucket=os.environ['S3_BUCKET'],
                           object_name='all_gearbox_types')
     two_word_car_brands = S3Reader() \
-        .get_data_from_s3(s3_resource=s3_resource,
-                          s3_bucket=os.environ['S3_BUCKET'],
+        .get_data_from_s3(s3_bucket=os.environ['S3_BUCKET'],
                           object_name='two_word_car_brands')
 
     # extract data about all items from the source
