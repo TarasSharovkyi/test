@@ -77,18 +77,14 @@ def lambda_handler(event, context):
                                        cars=cars)
 
     # Load daily data to S3
-    S3Logic().write_daily_to_s3(s3_resource=s3_resource,
-                                bucket=os.environ['S3_BUCKET'],
+    S3Logic().write_daily_to_s3(bucket=os.environ['S3_BUCKET'],
                                 prefix='ara/data',
                                 object_name=today.strftime("%m-%d-%y"),
-                                data_to_write=cars,
-                                week_number=week_num[1])
-    S3Logic().write_daily_to_s3(s3_resource=s3_resource,
-                                bucket=os.environ['S3_BUCKET'],
+                                data_to_write=cars)
+    S3Logic().write_daily_to_s3(bucket=os.environ['S3_BUCKET'],
                                 prefix='ara/exec',
                                 object_name=today.strftime("%m-%d-%y"),
-                                data_to_write=exec_data,
-                                week_number=week_num[1])
+                                data_to_write=exec_data)
 
     # load daily data to RDS
     connection = RDSLogic().get_rds_connection(host=os.environ['DB_HOST'],
