@@ -2,8 +2,8 @@
 ALL S3 LOGIC
 """
 import json
-import boto3
 import datetime
+import boto3
 
 
 class S3Logic:
