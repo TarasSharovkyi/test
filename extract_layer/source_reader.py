@@ -22,7 +22,7 @@ def process_data_to_tableview(today, my_date, week_num: int,
 
         if len(items) != 0:
             for item in items:
-               cars.append({
+                cars.append({
                     'week_number': week_num[1],
                     'date': today.strftime("%m-%d-%y"),
                     'day_of_week': calendar.day_name[my_date.weekday()],
@@ -32,8 +32,10 @@ def process_data_to_tableview(today, my_date, week_num: int,
                     'year_of_manufacture': get_year_of_manufacture(item),
                     'price_usd': get_price(item),
                     'mileage': get_mileage(item),
-                    'engine_type': get_engine_type_and_volume(item, all_engine_types)['engine_type'],
-                    'engine_volume': get_engine_type_and_volume(item, all_engine_types)['volume'],
+                    'engine_type': get_engine_type_and_volume(item,
+                                                              all_engine_types)['engine_type'],
+                    'engine_volume': get_engine_type_and_volume(item,
+                                                                all_engine_types)['volume'],
                     'gearbox_type': get_gearbox_type(item),
                     'location': get_location(item)
                 })
@@ -121,7 +123,10 @@ def get_engine_type_and_volume(item, all_engine_types) -> dict:
     """
     Something will be written here later...
     """
-    unstyle_characteristic = re.split(r'\s{3,}', str.strip(item.find('ul', class_="unstyle characteristic").text))
+    unstyle_characteristic = re.split(r'\s{3,}',
+                                      str.strip(
+                                          item.find('ul', class_="unstyle characteristic")
+                                              .text))
     egine_type_and_volume = unstyle_characteristic[2].split(', ')
     if len(egine_type_and_volume) < 2:
         if egine_type_and_volume[0] in all_engine_types.keys():
@@ -141,7 +146,10 @@ def get_gearbox_type(item):
     """
     Something will be written here later...
     """
-    gearbox_type = re.split(r'\s{3,}', str.strip(item.find('ul', class_="unstyle characteristic").text))
+    gearbox_type = re.split(r'\s{3,}',
+                            str.strip(
+                                item.find('ul', class_="unstyle characteristic")
+                                    .text))
 
     return gearbox_type[-1]
 
@@ -151,4 +159,3 @@ def get_link(item) -> str:
     Something will be written here later...
     """
     return item.find('a', class_='m-link-ticket').get('href')
-
