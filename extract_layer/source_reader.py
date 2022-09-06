@@ -5,8 +5,6 @@ import calendar
 import re
 import requests
 from bs4 import BeautifulSoup
-# import datetime
-# from datetime import date
 
 
 def process_data_to_tableview(today, my_date, week_num: int,
@@ -24,48 +22,20 @@ def process_data_to_tableview(today, my_date, week_num: int,
 
         if len(items) != 0:
             for item in items:
-                car_brand_and_model_list = get_brand_model_from_item(item, two_word_car_brands)
-                # mileage = re.findall('[0-9]+',
-                #                      str.lstrip(item.find('li',
-                #                                           class_='item-char js-race').text))
-                year = str.strip(item.find('a', class_='address').text)
-                mileage_loc_engine_gear = re.split(r'\s{3,}',
-                                                   str.strip(
-                                                       item.find('ul',
-                                                                 class_="unstyle characteristic")
-                                                           .text))
-                location = str.strip(item.find('li',
-                                               class_='item-char view-location js-location').text)
-                price = str.replace(item.find('span', class_='size15').text, ' ', '').split('$')
-                engine_volume = mileage_loc_engine_gear[2].split(', ')
-                if len(engine_volume) < 2:
-                    if engine_volume[0] in all_engine_types.keys():
-                        engine_type = engine_volume[0]
-                        volume = 0.0
-                    else:
-                        volume = engine_volume[:2]
-                        volume = volume[-1].split()
-                        volume = float(volume[0])
-                        engine_type = 'Not specified'
-                else:
-                    engine_type = engine_volume[0]
-                    volume = engine_volume[1].split()
-                    volume = float(volume[0])
-
-                cars.append({
+               cars.append({
                     'week_number': week_num[1],
                     'date': today.strftime("%m-%d-%y"),
                     'day_of_week': calendar.day_name[my_date.weekday()],
-                    'link': item.find('a', class_='m-link-ticket').get('href'),
-                    'brand': car_brand_and_model_list['brand'],
-                    'model': car_brand_and_model_list['model'],
-                    'year_of_manufacture': int(year[-4:]),
-                    'price_usd': int(price[0]),
+                    'link': get_link(item),
+                    'brand': get_brand_model_from_item(item, two_word_car_brands)['brand'],
+                    'model': get_brand_model_from_item(item, two_word_car_brands)['model'],
+                    'year_of_manufacture': get_year_of_manufacture(item),
+                    'price_usd': get_price(item),
                     'mileage': get_mileage(item),
-                    'engine_type': engine_type,
-                    'engine_volume': volume,
-                    'gearbox_type': mileage_loc_engine_gear[-1],
-                    'location': location[:-8]
+                    'engine_type': get_engine_type_and_volume(item, all_engine_types)['engine_type'],
+                    'engine_volume': get_engine_type_and_volume(item, all_engine_types)['volume'],
+                    'gearbox_type': get_gearbox_type(item),
+                    'location': get_location(item)
                 })
             page_number = page_number + 1
         else:
@@ -108,7 +78,77 @@ def get_brand_model_from_item(item, two_word_car_brands: dict) -> dict:
 
 
 def get_mileage(item) -> int:
+    """
+    Something will be written here later...
+    """
     mileage = re.findall('[0-9]+', str.lstrip(item.find('li', class_='item-char js-race').text))
     mileage = int(mileage[0]) * 1000
 
     return mileage
+
+
+def get_year_of_manufacture(item) -> int:
+    """
+    Something will be written here later...
+    """
+    year = str.strip(item.find('a', class_='address').text)
+    year = int(year[-4:])
+
+    return year
+
+
+def get_location(item) -> str:
+    """
+    Something will be written here later...
+    """
+    location = str.strip(item.find('li', class_='item-char view-location js-location').text)
+    location = location[:-8]
+
+    return location
+
+
+def get_price(item) -> int:
+    """
+    Something will be written here later...
+    """
+    price = str.replace(item.find('span', class_='size15').text, ' ', '').split('$')
+    price = int(price[0])
+
+    return price
+
+
+def get_engine_type_and_volume(item, all_engine_types) -> dict:
+    """
+    Something will be written here later...
+    """
+    unstyle_characteristic = re.split(r'\s{3,}', str.strip(item.find('ul', class_="unstyle characteristic").text))
+    egine_type_and_volume = unstyle_characteristic[2].split(', ')
+    if len(egine_type_and_volume) < 2:
+        if egine_type_and_volume[0] in all_engine_types.keys():
+            output_data = {'engine_type': egine_type_and_volume[0], 'volume': 0.0}
+        else:
+            volume = egine_type_and_volume[:2]
+            volume = volume[-1].split()
+            output_data = {'engine_type': 'Not specified', 'volume': float(volume[0])}
+    else:
+        volume = egine_type_and_volume[1].split()
+        output_data = {'engine_type': egine_type_and_volume[0], 'volume': float(volume[0])}
+
+    return output_data
+
+
+def get_gearbox_type(item):
+    """
+    Something will be written here later...
+    """
+    gearbox_type = re.split(r'\s{3,}', str.strip(item.find('ul', class_="unstyle characteristic").text))
+
+    return gearbox_type[-1]
+
+
+def get_link(item) -> str:
+    """
+    Something will be written here later...
+    """
+    return item.find('a', class_='m-link-ticket').get('href')
+
