@@ -4,7 +4,7 @@ RDS Logic
 import psycopg2
 
 
-class RDSLogic:
+class RDSLoader:
     """
     Something will be written here later...
     """

@@ -31,7 +31,7 @@ class AutoRiaReader:
                 for item in items:
                     cars.append({
                         'week_number': week_num[1],
-                        'date': self.date,
+                        'date': date.today().strftime(),
                         'day_of_week': calendar.day_name[my_date.weekday()],
                         'link': self.get_link(item),
                         'brand': self.get_brand_model_from_item(

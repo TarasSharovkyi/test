@@ -6,7 +6,7 @@ import datetime
 import boto3
 
 
-class S3Logic:
+class S3Loader:
     """
     Something will be written here later...
     """

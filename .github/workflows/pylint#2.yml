@@ -25,13 +25,16 @@ jobs:
     - name: Analysing the code with pylint ( processor )
       run: |
         pylint --fail-under=10.0 transform_layer/processor.py
-    - name: Analysing the code with pylint ( s3_logic )
+    - name: Analysing the code with pylint ( s3_loader )
       run: |
-        pylint --fail-under=10.0 load_layer/s3_logic.py
+        pylint --fail-under=10.0 load_layer/s3_loader.py
     - name: Analysing the code with pylint ( rds_logic )
       run: |
-        pylint --fail-under=10.0 load_layer/rds_logic.py
+        pylint --fail-under=10.0 load_layer/rds_reader.py
     - name: Analysing the code with pylint ( autoria_reader )
       run: |
         pylint --fail-under=10.0 extract_layer/autoria_reader.py
+    - name: Analysing the code with pylint ( s3_reader )
+      run: |
+        pylint --fail-under=10.0 extract_layer/s3_reader.py
         
