@@ -17,8 +17,11 @@ class S3Reader:
         This method extracts it from there and returns it in the required format
         """
         obj = self.s3_resource.Object(bucket_name=s3_bucket,
-                                 key=f'src/{object_name}.json').get()
+                                      key=f'src/{object_name}.json').get()
         data = obj['Body'].read().decode('utf-8')
         data = json.loads(data)
 
         return data
+
+    def __str__(self):
+        return self.__class__.__name__
