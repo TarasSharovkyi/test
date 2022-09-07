@@ -25,6 +25,7 @@ class S3Reader:
 
     def __str__(self):
         """
-        Something will be written here later...
+        This method prevents
+        "Pylint error 'R0903: Too few public methods'"
         """
         return self.__class__.__name__
