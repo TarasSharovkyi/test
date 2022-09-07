@@ -14,7 +14,7 @@ class AutoRiaReader:
     """
     date = date.today().strftime("%m-%d-%y")
 
-    def process_data_to_tableview(self, my_date, week_num: int,
+    def process_data_to_tableview(self, my_date, week_number: int,
                                   all_engine_types: dict, two_word_car_brands: dict):
         """
         this method extracts data from a source,
@@ -30,8 +30,8 @@ class AutoRiaReader:
             if len(items) != 0:
                 for item in items:
                     cars.append({
-                        'week_number': week_num[1],
-                        'date': date.today().strftime(),
+                        'week_number': week_number,
+                        'date': self.date,
                         'day_of_week': calendar.day_name[my_date.weekday()],
                         'link': self.get_link(item),
                         'brand': self.get_brand_model_from_item(

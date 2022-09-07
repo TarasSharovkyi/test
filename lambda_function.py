@@ -6,7 +6,6 @@ import time
 import json
 import datetime
 from datetime import date
-# import boto3
 from load_layer.s3_loader import S3Loader
 from load_layer.rds_loader import RDSLoader
 from extract_layer.autoria_reader import AutoRiaReader
@@ -34,8 +33,7 @@ def lambda_handler(event, context):
     """
     today = date.today()
     my_date = datetime.date.today()
-    week_num = my_date.isocalendar()
-    # s3_resource = boto3.resource('s3')
+    week_num = my_date.isocalendar()[1]
     # script start time
     start_time = time.time()
 

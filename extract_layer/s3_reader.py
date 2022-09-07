@@ -24,4 +24,7 @@ class S3Reader:
         return data
 
     def __str__(self):
+        """
+        Something will be written here later...
+        """
         return self.__class__.__name__

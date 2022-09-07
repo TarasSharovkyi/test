@@ -11,7 +11,7 @@ class S3Loader:
     Something will be written here later...
     """
     s3_resource = boto3.resource('s3')
-    week_number = datetime.date.today().isocalendar()
+    week_number = datetime.date.today().isocalendar()[1]
 
     def get_data_from_s3(self, s3_bucket: str, object_name: str) -> dict:
         """
@@ -19,7 +19,7 @@ class S3Loader:
         This method extracts it from there and returns it in the required format
         """
         obj = self.s3_resource.Object(bucket_name=s3_bucket,
-                                 key=f'src/{object_name}.json').get()
+                                      key=f'src/{object_name}.json').get()
         data = obj['Body'].read().decode('utf-8')
         data = json.loads(data)
 
