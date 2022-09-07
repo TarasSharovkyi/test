@@ -36,5 +36,5 @@ jobs:
         pylint --fail-under=10.0 extract_layer/autoria_reader.py
     - name: Analysing the code with pylint ( s3_reader )
       run: |
-        pylint --fail-under=10.0 extract_layer/s3_reader.py
+        pylint --fail-under=10.0 disable=too-few-public-methods extract_layer/s3_reader.py
         
