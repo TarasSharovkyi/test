@@ -12,7 +12,7 @@ class AutoRiaReader:
     """
     SOMETHING
     """
-    date = date.today.strftime("%m-%d-%y")
+    date = date.today().strftime("%m-%d-%y")
 
     def process_data_to_tableview(self, my_date, week_num: int,
                                   all_engine_types: dict, two_word_car_brands: dict):
